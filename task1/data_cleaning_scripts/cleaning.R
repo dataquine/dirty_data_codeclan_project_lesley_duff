@@ -47,11 +47,14 @@ str(clean_decathlon_data)
 
 # This dataset covers results for two separate competitions
 
-# We notice that the javelin column appears to be slightly misnamed.
-# I'll rename 'javeline' to 'javelin'  before more processing
+# We notice that the a couple of  column names appears to be slightly different
+# from expected
+# I'll rename 'javeline' to 'javelin'  and 
+# 'x110m_hurdle' -> 'x110m_hurdles' before more processing
 clean_decathlon_data <- clean_decathlon_data %>% 
-  rename("javelin" = "javeline")
-
+  rename("javelin" = "javeline") %>% 
+  rename("x110m_hurdles" = "x110m_hurdle")
+  
 # The data is in rows with row names indicating which athlete
 # Suggest moving these names into a column instead. They are also
 # a mix of sentence case for OlympicG and UPPERCASE for Decastar event.
@@ -62,6 +65,9 @@ decathlon_data <- clean_decathlon_data %>%
   
   # Convert uppercase to title case
   mutate(athlete = str_to_title(athlete))
+
+length(unique(decathlon_data$athlete))
+# There are 32 different athletes in the results
 
 # Write out clean data
 # I'm choosing to convert the original .rds into CSV instead for wider
