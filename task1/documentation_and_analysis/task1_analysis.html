@@ -2861,6 +2861,14 @@ average 100m time in each competition?</h3>
 <div id="who-had-the-highest-total-points-across-both-competitions" class="section level3" number="1.4.3">
 <h3><span class="header-section-number">1.4.3</span> Who had the highest
 total points across both competitions?</h3>
+<pre class="r"><code>decathlon_data %&gt;% 
+  select(athlete, points, competition)  %&gt;% 
+  slice_max(points, n = 1)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["athlete"],"name":[1],"type":["chr"],"align":["left"]},{"label":["points"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["competition"],"name":[3],"type":["chr"],"align":["left"]}],"data":[{"1":"Sebrle","2":"8893","3":"OlympicG"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
 </div>
 <div id="what-was-the-shot-put-scores-for-the-top-three-competitors-in-each-competition" class="section level3" number="1.4.4">
 <h3><span class="header-section-number">1.4.4</span> What was the
