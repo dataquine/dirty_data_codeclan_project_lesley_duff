@@ -1,0 +1,21 @@
+---
+title: "Task 1 - Decathlon Data"
+subtitle: "Dirty Data Project"
+output:
+  html_document:
+    df_print: paged
+    toc: true
+    toc_float: true
+    number_sections: true
+date: "`r format(Sys.Date())`"
+author: "Lesley Duff"
+---
+# Decathlon Data
+
+## Introduction
+## Analysis questions
+### Who had the longest long jump seen in the data?
+### What was the average 100m time in each competition?
+### Who had the highest total points across both competitions?
+### What was the shot-put scores for the top three competitors in each competition?
+### What was the average points for competitors who ran the 400m in less than 50 seconds vs. those than ran 400m in more than 50 seconds?
