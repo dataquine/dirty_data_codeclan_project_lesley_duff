@@ -48,10 +48,11 @@ competitions - `Decastar` and `OlympicG`.
 
 ## Cleaning
 
-* We renamed the column titles to remove full stops and start columns with numbers
-with an 'x'
-* We renamed javeline and x110m_hurdle to javelin and x110m_hurdles to better 
-match the English descriptions of the names of the events.
+* We renamed the column titles to remove full stops and start columns with numbers with an 'x' using `janitor::clean_names()`
+* We renamed `javeline` and `x110m_hurdle` to `javelin` and `x110m_hurdles` to better match the English descriptions of the names of the events.
+* We converted the original dataset file `raw_data/decathlon.rds` into a CSV 
+file to allow for wider usage. 
+The cleaned CSV file is at `clean_data/decathlon.csv`.
 
 ## Analysis questions   
 
@@ -112,3 +113,22 @@ decathlon_data %>%
   filter(x400m > 50) %>%
   summarise(average_points_x400m_over_50s = mean(points))
 ```
+
+## Other observations
+
+### How many competitions did athletes take part in?
+
+```{r}
+decathlon_data %>%
+  select(athlete, competition) %>% 
+  group_by(athlete) %>% 
+  summarise(number_competition = n()) %>% 
+  arrange(desc(number_competition))
+```
+## Which athlete had fastest 100m
+```{r}
+decathlon_data %>%
+  select(athlete, x100m) %>% 
+  slice_min(x100m, n = 1)
+```
+

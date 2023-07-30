@@ -2800,9 +2800,14 @@ competitions - <code>Decastar</code> and <code>OlympicG</code>.</li>
 <h2><span class="header-section-number">1.3</span> Cleaning</h2>
 <ul>
 <li>We renamed the column titles to remove full stops and start columns
-with numbers with an ‘x’</li>
-<li>We renamed javeline and x110m_hurdle to javelin and x110m_hurdles to
-better match the English descriptions of the names of the events.</li>
+with numbers with an ‘x’ using <code>janitor::clean_names()</code></li>
+<li>We renamed <code>javeline</code> and <code>x110m_hurdle</code> to
+<code>javelin</code> and <code>x110m_hurdles</code> to better match the
+English descriptions of the names of the events.</li>
+<li>We converted the original dataset file
+<code>raw_data/decathlon.rds</code> into a CSV file to allow for wider
+usage. The cleaned CSV file is at
+<code>clean_data/decathlon.csv</code>.</li>
 </ul>
 </div>
 <div id="analysis-questions" class="section level2" number="1.4">
@@ -2905,6 +2910,36 @@ vs. those than ran 400m in more than 50 seconds?</h3>
 {"columns":[{"label":["average_points_x400m_over_50s"],"name":[1],"type":["dbl"],"align":["right"]}],"data":[{"1":"7727.167"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
+</div>
+</div>
+<div id="other-observations" class="section level2" number="1.5">
+<h2><span class="header-section-number">1.5</span> Other
+observations</h2>
+<div id="how-many-competitions-did-athletes-take-part-in" class="section level3" number="1.5.1">
+<h3><span class="header-section-number">1.5.1</span> How many
+competitions did athletes take part in?</h3>
+<pre class="r"><code>decathlon_data %&gt;%
+  select(athlete, competition) %&gt;% 
+  group_by(athlete) %&gt;% 
+  summarise(number_competition = n()) %&gt;% 
+  arrange(desc(number_competition))</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["athlete"],"name":[1],"type":["chr"],"align":["left"]},{"label":["number_competition"],"name":[2],"type":["int"],"align":["right"]}],"data":[{"1":"Barras","2":"2"},{"1":"Bernard","2":"2"},{"1":"Clay","2":"2"},{"1":"Hernu","2":"2"},{"1":"Karpov","2":"2"},{"1":"Nool","2":"2"},{"1":"Sebrle","2":"2"},{"1":"Warners","2":"2"},{"1":"Zsivoczky","2":"2"},{"1":"Averyanov","2":"1"},{"1":"Bourguignon","2":"1"},{"1":"Casarsa","2":"1"},{"1":"Drews","2":"1"},{"1":"Gomez","2":"1"},{"1":"Karlivans","2":"1"},{"1":"Korkizoglou","2":"1"},{"1":"Lorenzo","2":"1"},{"1":"Macey","2":"1"},{"1":"Martineau","2":"1"},{"1":"Mcmullen","2":"1"},{"1":"Ojaniemi","2":"1"},{"1":"Parkhomenko","2":"1"},{"1":"Pogorelov","2":"1"},{"1":"Qi","2":"1"},{"1":"Schoenbeck","2":"1"},{"1":"Schwarzl","2":"1"},{"1":"Smirnov","2":"1"},{"1":"Smith","2":"1"},{"1":"Terek","2":"1"},{"1":"Turi","2":"1"},{"1":"Uldal","2":"1"},{"1":"Yurkov","2":"1"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<div id="which-athlete-had-fastest-100m" class="section level2" number="1.6">
+<h2><span class="header-section-number">1.6</span> Which athlete had
+fastest 100m</h2>
+<pre class="r"><code>decathlon_data %&gt;%
+  select(athlete, x100m) %&gt;% 
+  slice_min(x100m, n = 1)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["athlete"],"name":[1],"type":["chr"],"align":["left"]},{"label":["x100m"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"Clay","2":"10.44"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
 </div>
 </div>
 </div>
