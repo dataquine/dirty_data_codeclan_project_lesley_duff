@@ -13,6 +13,29 @@ author: "Lesley Duff"
 # Decathlon Data
 
 ## Introduction
+We have a dataset relating to a [Decathlon](https://en.wikipedia.org/wiki/Decathlon) event.
+
+> "The decathlon is a combined event in athletics consisting of ten track and field events...Performance is judged on a points system in each event, not by the position achieved"
+
+There are ten events over two days:
+
+* 100 metres
+* Long jump
+* Shot put
+* High jump
+* 400 metres
+* 110 metres hurdles
+* Discus throw
+* Pole vault
+* Javelin throw
+* 1500 metres
+
+## Assumptions
+
+* Due to the order of the columns I am assuming that this data is 
+a male decathlon. Women have a different order of decathlon events and are
+more likely to compete in a [heptathlon](https://en.wikipedia.org/wiki/Heptathlon) instead.
+
 ## Analysis questions
 ### Who had the longest long jump seen in the data?
 ### What was the average 100m time in each competition?
