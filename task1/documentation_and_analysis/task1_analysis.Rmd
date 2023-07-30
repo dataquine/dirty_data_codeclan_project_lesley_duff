@@ -96,10 +96,9 @@ decathlon_data %>%
 
 ```{r}
 decathlon_data %>% 
-  select(athlete, shot_put, competition) %>% 
+  select(shot_put, athlete, competition) %>% 
   group_by(competition) %>% 
   slice_max(shot_put, n = 3)
-
 ```
 
 
