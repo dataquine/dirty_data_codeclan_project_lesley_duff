@@ -33,26 +33,64 @@ There are ten events over two days:
 We have details of the athlete `rank` and `points` in each 
 `competition`.
 
+There are 32 different athletes in the results.
+
 
 ## Assumptions
 
 * Due to the order and number of the columns I am assuming that this data is 
-a male decathlon. Women have a different order of decathlon events and are more likely to compete in a seven event [heptathlon](https://en.wikipedia.org/wiki/Heptathlon) instead.
-* Preliminary cleaning of data reveals we have data for two separate competitions - `Decastar` and `OlympicG`.
+a male decathlon. Women have a different order of decathlon events and are more 
+likely to compete in a seven event 
+[heptathlon](https://en.wikipedia.org/wiki/Heptathlon) instead.
+* Preliminary cleaning of data reveals we have data for two separate 
+competitions - `Decastar` and `OlympicG`.
+
+
+## Cleaning
+
+* We renamed the column titles to remove full stops and start columns with numbers
+with an 'x'
+* We renamed javeline and x110m_hurdle to javelin and x110m_hurdles to better 
+match the English descriptions of the names of the events.
 
 ## Analysis questions   
 
 ```{r}
-source()
-source("")
+library(here)
+library(tidyverse)
 
+# use this to set the path to the data file
+decathlon_data <- read_csv(here("clean_data/decathlon.csv"))
 ```
 
 ### Who had the longest long jump seen in the data?
 
+```{r}
+decathlon_data %>% 
+  select(athlete, long_jump) %>% 
+  arrange( desc(long_jump)) %>% 
+  slice_max(long_jump, n = 1)
+```
 
+Clay had the longest long jump at 7.96m.
 
 ### What was the average 100m time in each competition?
+
+```{r}
+decathlon_data %>% 
+  select(x100m, competition) %>% 
+  group_by(competition) %>% 
+  summarise(average_100m_time = mean(x100m, na.rm = TRUE))
+
+```
+
 ### Who had the highest total points across both competitions?
+```{r}
+decathlon_data %>% 
+    select(athlete, points, competition) %>% 
+
+```
+
+
 ### What was the shot-put scores for the top three competitors in each competition?
 ### What was the average points for competitors who ran the 400m in less than 50 seconds vs. those than ran 400m in more than 50 seconds?

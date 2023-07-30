@@ -2783,6 +2783,7 @@ event, not by the position achieved”</p>
 </ul>
 <p>We have details of the athlete <code>rank</code> and
 <code>points</code> in each <code>competition</code>.</p>
+<p>There are 32 different athletes in the results.</p>
 </div>
 <div id="assumptions" class="section level2" number="1.2">
 <h2><span class="header-section-number">1.2</span> Assumptions</h2>
@@ -2795,27 +2796,78 @@ instead.</li>
 competitions - <code>Decastar</code> and <code>OlympicG</code>.</li>
 </ul>
 </div>
-<div id="analysis-questions" class="section level2" number="1.3">
-<h2><span class="header-section-number">1.3</span> Analysis
+<div id="cleaning" class="section level2" number="1.3">
+<h2><span class="header-section-number">1.3</span> Cleaning</h2>
+<ul>
+<li>We renamed the column titles to remove full stops and start columns
+with numbers with an ‘x’</li>
+<li>We renamed javeline and x110m_hurdle to javelin and x110m_hurdles to
+better match the English descriptions of the names of the events.</li>
+</ul>
+</div>
+<div id="analysis-questions" class="section level2" number="1.4">
+<h2><span class="header-section-number">1.4</span> Analysis
 questions</h2>
-<div id="who-had-the-longest-long-jump-seen-in-the-data" class="section level3" number="1.3.1">
-<h3><span class="header-section-number">1.3.1</span> Who had the longest
+<pre class="r"><code>library(here)</code></pre>
+<pre><code>## here() starts at /Users/dataquine/Library/CloudStorage/OneDrive-Personal/Codeclan/GitHub/CodeClan/dirty_data_codeclan_project_lesley_duff/task1</code></pre>
+<pre class="r"><code>library(tidyverse)</code></pre>
+<pre><code>## ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+## ✔ dplyr     1.1.2     ✔ readr     2.1.4
+## ✔ forcats   1.0.0     ✔ stringr   1.5.0
+## ✔ ggplot2   3.4.2     ✔ tibble    3.2.1
+## ✔ lubridate 1.9.2     ✔ tidyr     1.3.0
+## ✔ purrr     1.0.1</code></pre>
+<pre><code>## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+## ✖ dplyr::filter() masks stats::filter()
+## ✖ dplyr::lag()    masks stats::lag()
+## ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+<pre class="r"><code># use this to set the path to the data file
+decathlon_data &lt;- read_csv(here(&quot;clean_data/decathlon.csv&quot;))</code></pre>
+<pre><code>## Rows: 41 Columns: 14
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr  (2): athlete, competition
+## dbl (12): x100m, long_jump, shot_put, high_jump, x400m, x110m_hurdles, discu...
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<div id="who-had-the-longest-long-jump-seen-in-the-data" class="section level3" number="1.4.1">
+<h3><span class="header-section-number">1.4.1</span> Who had the longest
 long jump seen in the data?</h3>
+<pre class="r"><code>decathlon_data %&gt;% 
+  select(athlete, long_jump) %&gt;% 
+  arrange( desc(long_jump)) %&gt;% 
+  slice_max(long_jump, n = 1)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["athlete"],"name":[1],"type":["chr"],"align":["left"]},{"label":["long_jump"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"Clay","2":"7.96"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
 </div>
-<div id="what-was-the-average-100m-time-in-each-competition" class="section level3" number="1.3.2">
-<h3><span class="header-section-number">1.3.2</span> What was the
+<p>Clay had the longest long jump at 7.96m.</p>
+</div>
+<div id="what-was-the-average-100m-time-in-each-competition" class="section level3" number="1.4.2">
+<h3><span class="header-section-number">1.4.2</span> What was the
 average 100m time in each competition?</h3>
+<pre class="r"><code>decathlon_data %&gt;% 
+  select(x100m, competition) %&gt;% 
+  group_by(competition) %&gt;% 
+  summarise(average_100m_time = mean(x100m, na.rm = TRUE))</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["competition"],"name":[1],"type":["chr"],"align":["left"]},{"label":["average_100m_time"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"Decastar","2":"11.17538"},{"1":"OlympicG","2":"10.91571"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
 </div>
-<div id="who-had-the-highest-total-points-across-both-competitions" class="section level3" number="1.3.3">
-<h3><span class="header-section-number">1.3.3</span> Who had the highest
+</div>
+<div id="who-had-the-highest-total-points-across-both-competitions" class="section level3" number="1.4.3">
+<h3><span class="header-section-number">1.4.3</span> Who had the highest
 total points across both competitions?</h3>
 </div>
-<div id="what-was-the-shot-put-scores-for-the-top-three-competitors-in-each-competition" class="section level3" number="1.3.4">
-<h3><span class="header-section-number">1.3.4</span> What was the
+<div id="what-was-the-shot-put-scores-for-the-top-three-competitors-in-each-competition" class="section level3" number="1.4.4">
+<h3><span class="header-section-number">1.4.4</span> What was the
 shot-put scores for the top three competitors in each competition?</h3>
 </div>
-<div id="what-was-the-average-points-for-competitors-who-ran-the-400m-in-less-than-50-seconds-vs.-those-than-ran-400m-in-more-than-50-seconds" class="section level3" number="1.3.5">
-<h3><span class="header-section-number">1.3.5</span> What was the
+<div id="what-was-the-average-points-for-competitors-who-ran-the-400m-in-less-than-50-seconds-vs.-those-than-ran-400m-in-more-than-50-seconds" class="section level3" number="1.4.5">
+<h3><span class="header-section-number">1.4.5</span> What was the
 average points for competitors who ran the 400m in less than 50 seconds
 vs. those than ran 400m in more than 50 seconds?</h3>
 </div>
