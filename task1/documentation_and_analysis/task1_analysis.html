@@ -2873,6 +2873,15 @@ total points across both competitions?</h3>
 <div id="what-was-the-shot-put-scores-for-the-top-three-competitors-in-each-competition" class="section level3" number="1.4.4">
 <h3><span class="header-section-number">1.4.4</span> What was the
 shot-put scores for the top three competitors in each competition?</h3>
+<pre class="r"><code>decathlon_data %&gt;% 
+  select(athlete, shot_put, competition) %&gt;% 
+  group_by(competition) %&gt;% 
+  slice_max(shot_put, n = 3)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["athlete"],"name":[1],"type":["chr"],"align":["left"]},{"label":["shot_put"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["competition"],"name":[3],"type":["chr"],"align":["left"]}],"data":[{"1":"Yurkov","2":"15.19","3":"Decastar"},{"1":"Sebrle","2":"14.83","3":"Decastar"},{"1":"Karpov","2":"14.77","3":"Decastar"},{"1":"Sebrle","2":"16.36","3":"OlympicG"},{"1":"Karpov","2":"15.93","3":"OlympicG"},{"1":"Macey","2":"15.73","3":"OlympicG"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
 </div>
 <div id="what-was-the-average-points-for-competitors-who-ran-the-400m-in-less-than-50-seconds-vs.-those-than-ran-400m-in-more-than-50-seconds" class="section level3" number="1.4.5">
 <h3><span class="header-section-number">1.4.5</span> What was the

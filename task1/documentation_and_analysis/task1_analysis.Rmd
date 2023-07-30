@@ -93,4 +93,15 @@ decathlon_data %>%
 
 
 ### What was the shot-put scores for the top three competitors in each competition?
+
+```{r}
+decathlon_data %>% 
+  select(athlete, shot_put, competition) %>% 
+  group_by(competition) %>% 
+  slice_max(shot_put, n = 3)
+
+```
+
+
+
 ### What was the average points for competitors who ran the 400m in less than 50 seconds vs. those than ran 400m in more than 50 seconds?
