@@ -2834,9 +2834,9 @@ decathlon_data &lt;- read_csv(here(&quot;clean_data/decathlon.csv&quot;))</code>
 <div id="who-had-the-longest-long-jump-seen-in-the-data" class="section level3" number="1.4.1">
 <h3><span class="header-section-number">1.4.1</span> Who had the longest
 long jump seen in the data?</h3>
-<pre class="r"><code>decathlon_data %&gt;% 
-  select(athlete, long_jump) %&gt;% 
-  arrange( desc(long_jump)) %&gt;% 
+<pre class="r"><code>decathlon_data %&gt;%
+  select(athlete, long_jump) %&gt;%
+  arrange(desc(long_jump)) %&gt;%
   slice_max(long_jump, n = 1)</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
@@ -2848,9 +2848,9 @@ long jump seen in the data?</h3>
 <div id="what-was-the-average-100m-time-in-each-competition" class="section level3" number="1.4.2">
 <h3><span class="header-section-number">1.4.2</span> What was the
 average 100m time in each competition?</h3>
-<pre class="r"><code>decathlon_data %&gt;% 
-  select(x100m, competition) %&gt;% 
-  group_by(competition) %&gt;% 
+<pre class="r"><code>decathlon_data %&gt;%
+  select(x100m, competition) %&gt;%
+  group_by(competition) %&gt;%
   summarise(average_100m_time = mean(x100m, na.rm = TRUE))</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
@@ -2861,8 +2861,8 @@ average 100m time in each competition?</h3>
 <div id="who-had-the-highest-total-points-across-both-competitions" class="section level3" number="1.4.3">
 <h3><span class="header-section-number">1.4.3</span> Who had the highest
 total points across both competitions?</h3>
-<pre class="r"><code>decathlon_data %&gt;% 
-  select(athlete, points, competition)  %&gt;% 
+<pre class="r"><code>decathlon_data %&gt;%
+  select(athlete, points, competition) %&gt;%
   slice_max(points, n = 1)</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
@@ -2873,9 +2873,9 @@ total points across both competitions?</h3>
 <div id="what-was-the-shot-put-scores-for-the-top-three-competitors-in-each-competition" class="section level3" number="1.4.4">
 <h3><span class="header-section-number">1.4.4</span> What was the
 shot-put scores for the top three competitors in each competition?</h3>
-<pre class="r"><code>decathlon_data %&gt;% 
-  select(shot_put, athlete, competition) %&gt;% 
-  group_by(competition) %&gt;% 
+<pre class="r"><code>decathlon_data %&gt;%
+  select(shot_put, athlete, competition) %&gt;%
+  group_by(competition) %&gt;%
   slice_max(shot_put, n = 3)</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
@@ -2887,6 +2887,24 @@ shot-put scores for the top three competitors in each competition?</h3>
 <h3><span class="header-section-number">1.4.5</span> What was the
 average points for competitors who ran the 400m in less than 50 seconds
 vs. those than ran 400m in more than 50 seconds?</h3>
+<pre class="r"><code>decathlon_data %&gt;%
+  select(points, x400m) %&gt;%
+  filter(x400m &lt; 50) %&gt;%
+  summarise(average_points_x400m_under_50s = mean(points))</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["average_points_x400m_under_50s"],"name":[1],"type":["dbl"],"align":["right"]}],"data":[{"1":"8120.483"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<pre class="r"><code>decathlon_data %&gt;%
+  select(points, x400m) %&gt;%
+  filter(x400m &gt; 50) %&gt;%
+  summarise(average_points_x400m_over_50s = mean(points))</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["average_points_x400m_over_50s"],"name":[1],"type":["dbl"],"align":["right"]}],"data":[{"1":"7727.167"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
 </div>
 </div>
 </div>
