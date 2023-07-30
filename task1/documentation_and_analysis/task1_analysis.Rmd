@@ -30,13 +30,28 @@ There are ten events over two days:
 * Javelin throw
 * 1500 metres
 
+We have details of the athlete `rank` and `points` in each 
+`competition`.
+
+
 ## Assumptions
 
-* Due to the order of the columns I am assuming that this data is 
+* Due to the order and number of the columns I am assuming that this data is 
 a male decathlon. Women have a different order of decathlon events and are more likely to compete in a seven event [heptathlon](https://en.wikipedia.org/wiki/Heptathlon) instead.
+* Preliminary cleaning of data reveals we have data for two separate competitions - `Decastar` and `OlympicG`.
 
-## Analysis questions
+## Analysis questions   
+
+```{r}
+source()
+source("")
+
+```
+
 ### Who had the longest long jump seen in the data?
+
+
+
 ### What was the average 100m time in each competition?
 ### Who had the highest total points across both competitions?
 ### What was the shot-put scores for the top three competitors in each competition?

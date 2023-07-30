@@ -57,13 +57,16 @@ clean_decathlon_data <- clean_decathlon_data %>%
 # a mix of sentence case for OlympicG and UPPERCASE for Decastar event.
 
 # Turn row names into a column 'athlete'
-clean_decathlon_data <- clean_decathlon_data %>% 
+decathlon_data <- clean_decathlon_data %>% 
   rownames_to_column(var = "athlete") %>% 
   
   # Convert uppercase to title case
   mutate(athlete = str_to_title(athlete))
 
-
+# Write out clean data
+# I'm choosing to convert the original .rds into CSV instead for wider
+# usage.
+write_csv(decathlon_data, "clean_data/decathlon.csv")
 
 
 
