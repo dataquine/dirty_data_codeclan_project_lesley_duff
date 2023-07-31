@@ -23,16 +23,16 @@ process_decathlon_data <- function(path_dirty_rds_data, path_clean_csv_data) {
   # dim(decathlon_data) # 41 rows, 13 columns
   # head(decathlon_data)
   # names(decathlon_data) # Check column names
-  
+
   # column names are mixed case and include full stops
   # Suggest janitor
-  
+
   clean_decathlon_data <- decathlon_data %>%
     janitor::clean_names()
-  
+
   # Check the renamed columns
   # names(clean_decathlon_data)
-  
+
   # The names contain variables matching the 10 events listed
   # 100 metres,x100m
   # Long jump, long_jump
@@ -44,45 +44,70 @@ process_decathlon_data <- function(path_dirty_rds_data, path_clean_csv_data) {
   # Pole vault, pole_vault
   # Javelin throw, javeline
   # 1500 metres, x1500m
-  
+
   # extra fields are
   # Rank, rank
   # Points, points
   # Competition, competition
-  
+
   # Check the data types of the columns
   # str(clean_decathlon_data)
   # All events are numeric
   # rank and points are integers
   # competition is Factor w/ 2 levels "Decastar","OlympicG"
-  
+
   # This dataset covers results for two separate competitions
-  
   clean_decathlon_data <- clean_decathlon_data %>%
-    # A couple of column event names appear to be named slightly differently 
+    # A couple of column event names appear to be named slightly differently
     # from expected.
-    # Rename 'javeline' to 'javelin'  and 'x110m_hurdle' -> 'x110m_hurdles' 
+    # Rename 'javeline' to 'javelin'  and 'x110m_hurdle' -> 'x110m_hurdles'
     # before more processing
     rename("javelin" = "javeline") %>%
-    rename("x110m_hurdles" = "x110m_hurdle") %>% 
-  
     # The data is in rows with row names indicating which athlete
     # Suggest moving these names into a column instead. They are also
     # a mix of Title case for OlympicG and UPPERCASE for Decastar event.
     # Turn row names into a column 'athlete'
     rownames_to_column(var = "athlete") %>%
-    # Convert e.g. original to title case so they are all the same for 
+    # Convert e.g. original to title case so they are all the same for
     # consistency
-    mutate(athlete = str_to_title(athlete))
-  
+    mutate(athlete = str_to_title(athlete)) %>%
+    # Tidy data - missed the hint first time around about column names
+    # each event has it's own column,
+    # create new 'decathlon_event' column with the event names
+    # create new 'result' column with the results
+    # This is slightly awkward as the values use different units but they
+    # should all be numeric
+    pivot_longer(
+      cols = x100m:x1500m,
+      names_to = "decathlon_event",
+      values_to = "result"
+    ) %>%
+    # Make friendlier value names
+    # Get rid of leading x in values that came from number-leading columns
+    mutate(
+      decathlon_event = str_replace(decathlon_event, "^x", ""),
+
+      # Replace underscores with spaces
+      decathlon_event = str_replace(decathlon_event, "_", " "),
+
+      # Just to match the English title better
+      decathlon_event = str_replace(decathlon_event, "hurdle", "hurdles")
+    )
+
+  # View(clean_decathlon_data)
+
   # Find out how many athletes there are
   # length(unique(clean_decathlon_data$athlete))
   # There are 32 different athletes in the results
-  
+
   # Write out clean data
   # The original .rds format is converted into CSV instead for wider usage.
-  write_csv(clean_decathlon_data, path_clean_csv_data)
+  # write_csv(clean_decathlon_data, path_clean_csv_data)
+  return(clean_decathlon_data)
 }
 
-process_decathlon_data("raw_data/decathlon.rds",
-                       "clean_data/decathlon.csv")
+cleaned_decathlon_data <- process_decathlon_data(
+  "raw_data/decathlon.rds",
+  "clean_data/decathlon.csv"
+)
+# TODO if more time - add assertive programming to check values
