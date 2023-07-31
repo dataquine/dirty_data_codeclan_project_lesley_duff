@@ -17,10 +17,10 @@ library(tidyverse)
 # ?read_rds()
 
 # read original decathlon dataset
-decathlon_data <- read_rds(here("raw_data/decathlon.rds"))
+decathlon_data <- read_rds(here::here("raw_data/decathlon.rds"))
 
 # Path where cleaned CSV output will be written
-decathlon_csv_path <- here("clean_data/decathlon.csv")
+decathlon_csv_path <- here::here("clean_data/decathlon.csv")
 
 dim(decathlon_data) # 41 rows, 13 columns
 head(decathlon_data)
