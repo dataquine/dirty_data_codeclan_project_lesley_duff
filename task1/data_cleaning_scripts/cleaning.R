@@ -10,16 +10,17 @@
 #   Output: we assume a folder "clean_data" has already been created.
 #     The cleaned CSV file is output to "clean_data/decathlon.csv"
 
+library(here)
 library(janitor)
 library(tidyverse)
 
 # ?read_rds()
 
 # read original decathlon dataset
-decathlon_data <- read_rds("raw_data/decathlon.rds")
+decathlon_data <- read_rds(here("raw_data/decathlon.rds"))
 
 # Path where cleaned CSV output will be written
-decathlon_csv_path <- "clean_data/decathlon.csv"
+decathlon_csv_path <- here("clean_data/decathlon.csv")
 
 dim(decathlon_data) # 41 rows, 13 columns
 head(decathlon_data)
