@@ -16,7 +16,9 @@ author: "Lesley Duff"
 We have a dataset `raw_data/decathlon.rds` relating to a 
 [Decathlon](https://en.wikipedia.org/wiki/Decathlon) event.
 
-> "The decathlon is a combined event in athletics consisting of ten track and field events...Performance is judged on a points system in each event, not by the position achieved"
+> "The decathlon is a combined event in athletics consisting of ten track and 
+field events...Performance is judged on a points system in each event, not by 
+the position achieved"
 
 There are ten events over two days:
 
