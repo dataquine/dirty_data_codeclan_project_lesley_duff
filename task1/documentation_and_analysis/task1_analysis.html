@@ -11,7 +11,7 @@
 
 <meta name="author" content="Lesley Duff" />
 
-<meta name="date" content="2023-07-30" />
+<meta name="date" content="2023-07-31" />
 
 <title>Task 1 - Decathlon Data</title>
 
@@ -2753,7 +2753,7 @@ border-radius: 0px;
 <h1 class="title toc-ignore">Task 1 - Decathlon Data</h1>
 <h3 class="subtitle">Dirty Data Project</h3>
 <h4 class="author">Lesley Duff</h4>
-<h4 class="date">2023-07-30</h4>
+<h4 class="date">2023-07-31</h4>
 
 </div>
 
@@ -2762,7 +2762,9 @@ border-radius: 0px;
 <h1><span class="header-section-number">1</span> Decathlon Data</h1>
 <div id="introduction" class="section level2" number="1.1">
 <h2><span class="header-section-number">1.1</span> Introduction</h2>
-<p>We have a dataset relating to a <a href="https://en.wikipedia.org/wiki/Decathlon">Decathlon</a> event.</p>
+<p>We have a dataset <code>raw_data/decathlon.rds</code> relating to a
+<a href="https://en.wikipedia.org/wiki/Decathlon">Decathlon</a>
+event.</p>
 <blockquote>
 <p>“The decathlon is a combined event in athletics consisting of ten
 track and field events…Performance is judged on a points system in each
@@ -2781,33 +2783,53 @@ event, not by the position achieved”</p>
 <li>Javelin throw</li>
 <li>1500 metres</li>
 </ul>
-<p>We have details of the athlete <code>rank</code> and
+<p>We have details of the results by each athlete for each of the ten
+events. Also available is the athlete <code>rank</code> and
 <code>points</code> in each <code>competition</code>.</p>
 <p>There are 32 different athletes in the results.</p>
+<p>The source of the data is <a href="https://rdrr.io/github/husson/FactoMineR/man/decathlon.html">decathlon:
+Performance in decathlon (data)</a>. This source claims the details are
+from events in 2004.</p>
 </div>
 <div id="assumptions" class="section level2" number="1.2">
 <h2><span class="header-section-number">1.2</span> Assumptions</h2>
+<div id="technical" class="section level3" number="1.2.1">
+<h3><span class="header-section-number">1.2.1</span> Technical</h3>
 <ul>
-<li>Due to the order and number of the columns I am assuming that this
-data is a male decathlon. Women have a different order of decathlon
-events and are more likely to compete in a seven event <a href="https://en.wikipedia.org/wiki/Heptathlon">heptathlon</a>
-instead.</li>
-<li>Preliminary cleaning of data reveals we have data for two separate
-competitions - <code>Decastar</code> and <code>OlympicG</code>.</li>
+<li>A script <code>data_cleaning_scripts/cleaning.R</code> has been run
+prior to analysis. The original dataset file
+<code>raw_data/decathlon.rds</code> cleaned dataset as a new CSV file
+<code>clean_data/decathlon.csv</code>. CSV is a more accessible format
+usable by a wider range of software. All further analysis was done using
+the new CSV file.</li>
 </ul>
+</div>
+<div id="non-technical" class="section level3" number="1.2.2">
+<h3><span class="header-section-number">1.2.2</span> Non-technical</h3>
+<ul>
+<li>Due to the order and number of the columns it is assumed that this
+data is a male decathlon. Females compete in this event more rarely and
+have a different order of decathlon events.</li>
+<li>Preliminary cleaning of data reveals we have data for two separate
+competitions - <code>Decastar</code> and <code>OlympicG</code> (Olympic
+Games).</li>
+</ul>
+</div>
 </div>
 <div id="cleaning" class="section level2" number="1.3">
 <h2><span class="header-section-number">1.3</span> Cleaning</h2>
+<p>The following changes to the dataset were made by the cleaning script
+<code>data_cleaning_scripts/cleaning.R</code>:</p>
 <ul>
-<li>We renamed the column titles to remove full stops and start columns
-with numbers with an ‘x’ using <code>janitor::clean_names()</code></li>
-<li>We renamed <code>javeline</code> and <code>x110m_hurdle</code> to
-<code>javelin</code> and <code>x110m_hurdles</code> to better match the
-English descriptions of the names of the events.</li>
-<li>We converted the original dataset file
-<code>raw_data/decathlon.rds</code> into a CSV file to allow for wider
-usage. The cleaned CSV file is at
-<code>clean_data/decathlon.csv</code>.</li>
+<li>The column titles were renamed to remove full stops and start
+columns with numbers with an ‘x’ using
+<code>janitor::clean_names()</code></li>
+<li>Columns <code>javeline</code> and <code>x110m_hurdle</code> were
+renamed to <code>javelin</code> and <code>x110m_hurdles</code> to
+improve the match to the English descriptions of the names of the
+events.</li>
+<li>The original data had row names with the names of the athletes.
+These were moved to be a new column <code>athlete</code>.</li>
 </ul>
 </div>
 <div id="analysis-questions" class="section level2" number="1.4">
@@ -2826,8 +2848,8 @@ questions</h2>
 ## ✖ dplyr::filter() masks stats::filter()
 ## ✖ dplyr::lag()    masks stats::lag()
 ## ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
-<pre class="r"><code># use this to set the path to the data file
-decathlon_data &lt;- read_csv(here(&quot;clean_data/decathlon.csv&quot;))</code></pre>
+<pre class="r"><code># read cleaned decathlon dataset
+decathlon_data &lt;- read_csv(here::here(&quot;clean_data/decathlon.csv&quot;))</code></pre>
 <pre><code>## Rows: 41 Columns: 14
 ## ── Column specification ────────────────────────────────────────────────────────
 ## Delimiter: &quot;,&quot;
@@ -2841,14 +2863,14 @@ decathlon_data &lt;- read_csv(here(&quot;clean_data/decathlon.csv&quot;))</code>
 long jump seen in the data?</h3>
 <pre class="r"><code>decathlon_data %&gt;%
   select(athlete, long_jump) %&gt;%
-  arrange(desc(long_jump)) %&gt;%
   slice_max(long_jump, n = 1)</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["athlete"],"name":[1],"type":["chr"],"align":["left"]},{"label":["long_jump"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"Clay","2":"7.96"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
-<p>Clay had the longest long jump at 7.96m.</p>
+<p><strong>Clay</strong> had the longest long jump at
+<strong>7.96m</strong>.</p>
 </div>
 <div id="what-was-the-average-100m-time-in-each-competition" class="section level3" number="1.4.2">
 <h3><span class="header-section-number">1.4.2</span> What was the
@@ -2862,31 +2884,58 @@ average 100m time in each competition?</h3>
 {"columns":[{"label":["competition"],"name":[1],"type":["chr"],"align":["left"]},{"label":["average_100m_time"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"Decastar","2":"11.17538"},{"1":"OlympicG","2":"10.91571"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
+<p>The average 100m time in <strong>Decastar</strong> was
+<strong>11.17538s</strong>.<br />
+The average 100m time in <strong>Olympic Games</strong> was
+<strong>10.91571s</strong>.</p>
 </div>
 <div id="who-had-the-highest-total-points-across-both-competitions" class="section level3" number="1.4.3">
 <h3><span class="header-section-number">1.4.3</span> Who had the highest
 total points across both competitions?</h3>
 <pre class="r"><code>decathlon_data %&gt;%
-  select(athlete, points, competition) %&gt;%
-  slice_max(points, n = 1)</code></pre>
+  select(athlete, points) %&gt;%
+  group_by(athlete) %&gt;% 
+  summarise(total_points = sum(points)) %&gt;% 
+  slice_max(total_points, n = 1)</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":["athlete"],"name":[1],"type":["chr"],"align":["left"]},{"label":["points"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["competition"],"name":[3],"type":["chr"],"align":["left"]}],"data":[{"1":"Sebrle","2":"8893","3":"OlympicG"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["athlete"],"name":[1],"type":["chr"],"align":["left"]},{"label":["total_points"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"Sebrle","2":"17110"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
+<p><strong>Sebrle</strong> has the highest total points across both
+competitions, <strong>17,110</strong>.</p>
+<p>This is assuming that we are totaling the points obtained by each
+athlete in all competitions they participated in. Some athletes only
+participated in one competition.</p>
 </div>
 <div id="what-was-the-shot-put-scores-for-the-top-three-competitors-in-each-competition" class="section level3" number="1.4.4">
 <h3><span class="header-section-number">1.4.4</span> What was the
 shot-put scores for the top three competitors in each competition?</h3>
 <pre class="r"><code>decathlon_data %&gt;%
-  select(shot_put, athlete, competition) %&gt;%
+  select(shot_put, athlete, competition, points) %&gt;%
   group_by(competition) %&gt;%
-  slice_max(shot_put, n = 3)</code></pre>
+  slice_max(points, n = 3)</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":["shot_put"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["athlete"],"name":[2],"type":["chr"],"align":["left"]},{"label":["competition"],"name":[3],"type":["chr"],"align":["left"]}],"data":[{"1":"15.19","2":"Yurkov","3":"Decastar"},{"1":"14.83","2":"Sebrle","3":"Decastar"},{"1":"14.77","2":"Karpov","3":"Decastar"},{"1":"16.36","2":"Sebrle","3":"OlympicG"},{"1":"15.93","2":"Karpov","3":"OlympicG"},{"1":"15.73","2":"Macey","3":"OlympicG"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["shot_put"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["athlete"],"name":[2],"type":["chr"],"align":["left"]},{"label":["competition"],"name":[3],"type":["chr"],"align":["left"]},{"label":["points"],"name":[4],"type":["dbl"],"align":["right"]}],"data":[{"1":"14.83","2":"Sebrle","3":"Decastar","4":"8217"},{"1":"14.26","2":"Clay","3":"Decastar","4":"8122"},{"1":"14.77","2":"Karpov","3":"Decastar","4":"8099"},{"1":"16.36","2":"Sebrle","3":"OlympicG","4":"8893"},{"1":"15.23","2":"Clay","3":"OlympicG","4":"8820"},{"1":"15.93","2":"Karpov","3":"OlympicG","4":"8725"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
+<p>In <strong>Decastar</strong> shot-put scores for the top three
+competitors were</p>
+<ol style="list-style-type: decimal">
+<li>14.83m - Sebrle</li>
+<li>14.26m - Clay</li>
+<li>14.77m - Karpov</li>
+</ol>
+<p>In <strong>Olympic Games</strong> shot-put scores for the top three
+competitors were</p>
+<ol style="list-style-type: decimal">
+<li>16.36 - Sebrle</li>
+<li>15.23 - Clay</li>
+<li>15.93 - Karpov</li>
+</ol>
+<p>This is assuming that we are measuring ‘top’ as highest points by a
+competitor.</p>
 </div>
 <div id="what-was-the-average-points-for-competitors-who-ran-the-400m-in-less-than-50-seconds-vs.-those-than-ran-400m-in-more-than-50-seconds" class="section level3" number="1.4.5">
 <h3><span class="header-section-number">1.4.5</span> What was the
@@ -2910,36 +2959,126 @@ vs. those than ran 400m in more than 50 seconds?</h3>
 {"columns":[{"label":["average_points_x400m_over_50s"],"name":[1],"type":["dbl"],"align":["right"]}],"data":[{"1":"7727.167"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
+<p>average points for competitors who ran the 400m in less than 50
+seconds - <strong>8120.483</strong>.<br />
+vs.<br />
+average points for competitors who ran 400m in more than 50 seconds -
+<strong>7727.167</strong></p>
 </div>
 </div>
 <div id="other-observations" class="section level2" number="1.5">
 <h2><span class="header-section-number">1.5</span> Other
 observations</h2>
-<div id="how-many-competitions-did-athletes-take-part-in" class="section level3" number="1.5.1">
-<h3><span class="header-section-number">1.5.1</span> How many
-competitions did athletes take part in?</h3>
+<div id="how-many-athletes-took-part-in-each-competition" class="section level3" number="1.5.1">
+<h3><span class="header-section-number">1.5.1</span> How many athletes
+took part in each competition?</h3>
+<pre class="r"><code>decathlon_data %&gt;%
+  group_by(competition) %&gt;% 
+  summarise(num_athletes = n())</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["competition"],"name":[1],"type":["chr"],"align":["left"]},{"label":["num_athletes"],"name":[2],"type":["int"],"align":["right"]}],"data":[{"1":"Decastar","2":"13"},{"1":"OlympicG","2":"28"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p><strong>13</strong> athletes took part in
+<strong>Decastar</strong>.<br />
+<strong>28</strong> athletes took part in <strong>Olympic
+Games</strong>.</p>
+</div>
+<div id="which-athletes-took-part-in-both-competitions" class="section level3" number="1.5.2">
+<h3><span class="header-section-number">1.5.2</span> Which athletes took
+part in both competitions?</h3>
 <pre class="r"><code>decathlon_data %&gt;%
   select(athlete, competition) %&gt;% 
   group_by(athlete) %&gt;% 
-  summarise(number_competition = n()) %&gt;% 
-  arrange(desc(number_competition))</code></pre>
+  summarise(number_competitions = n()) %&gt;% 
+  filter(number_competitions == 2)</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":["athlete"],"name":[1],"type":["chr"],"align":["left"]},{"label":["number_competition"],"name":[2],"type":["int"],"align":["right"]}],"data":[{"1":"Barras","2":"2"},{"1":"Bernard","2":"2"},{"1":"Clay","2":"2"},{"1":"Hernu","2":"2"},{"1":"Karpov","2":"2"},{"1":"Nool","2":"2"},{"1":"Sebrle","2":"2"},{"1":"Warners","2":"2"},{"1":"Zsivoczky","2":"2"},{"1":"Averyanov","2":"1"},{"1":"Bourguignon","2":"1"},{"1":"Casarsa","2":"1"},{"1":"Drews","2":"1"},{"1":"Gomez","2":"1"},{"1":"Karlivans","2":"1"},{"1":"Korkizoglou","2":"1"},{"1":"Lorenzo","2":"1"},{"1":"Macey","2":"1"},{"1":"Martineau","2":"1"},{"1":"Mcmullen","2":"1"},{"1":"Ojaniemi","2":"1"},{"1":"Parkhomenko","2":"1"},{"1":"Pogorelov","2":"1"},{"1":"Qi","2":"1"},{"1":"Schoenbeck","2":"1"},{"1":"Schwarzl","2":"1"},{"1":"Smirnov","2":"1"},{"1":"Smith","2":"1"},{"1":"Terek","2":"1"},{"1":"Turi","2":"1"},{"1":"Uldal","2":"1"},{"1":"Yurkov","2":"1"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["athlete"],"name":[1],"type":["chr"],"align":["left"]},{"label":["number_competitions"],"name":[2],"type":["int"],"align":["right"]}],"data":[{"1":"Barras","2":"2"},{"1":"Bernard","2":"2"},{"1":"Clay","2":"2"},{"1":"Hernu","2":"2"},{"1":"Karpov","2":"2"},{"1":"Nool","2":"2"},{"1":"Sebrle","2":"2"},{"1":"Warners","2":"2"},{"1":"Zsivoczky","2":"2"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
+<p>The following athletes took part in both competitions:</p>
+<p><strong>Barras, Bernard, Clay, Hernu, Karpov, Nool, Sebrle, Warners,
+Zsivoczky</strong></p>
 </div>
-</div>
-<div id="which-athlete-had-fastest-100m" class="section level2" number="1.6">
-<h2><span class="header-section-number">1.6</span> Which athlete had
-fastest 100m</h2>
+<div id="results-by-event" class="section level3" number="1.5.3">
+<h3><span class="header-section-number">1.5.3</span> Results by
+event</h3>
+<div id="best-results-for-each-event" class="section level4" number="1.5.3.1">
+<h4><span class="header-section-number">1.5.3.1</span> Best results for
+each event</h4>
 <pre class="r"><code>decathlon_data %&gt;%
-  select(athlete, x100m) %&gt;% 
-  slice_min(x100m, n = 1)</code></pre>
+  select(x100m, long_jump, shot_put, high_jump, x400m, x110m_hurdles, discus,
+         pole_vault, javelin, x1500m) %&gt;% 
+  summarise(best_100m = min(x100m),
+            best_long_jump = max(long_jump),
+            best_shot_put = max(shot_put),
+            best_high_jump = max(high_jump),
+            best_400m = min(x400m),
+            best_110m_hurdles = min(x110m_hurdles),
+            best_discus = max(discus),
+            best_pole_vault = max(pole_vault),
+            best_javelin = max(javelin),
+            best_1500m = min(x1500m)
+            )</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":["athlete"],"name":[1],"type":["chr"],"align":["left"]},{"label":["x100m"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"Clay","2":"10.44"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["best_100m"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["best_long_jump"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["best_shot_put"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["best_high_jump"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["best_400m"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["best_110m_hurdles"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["best_discus"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["best_pole_vault"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["best_javelin"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["best_1500m"],"name":[10],"type":["dbl"],"align":["right"]}],"data":[{"1":"10.44","2":"7.96","3":"16.36","4":"2.15","5":"46.81","6":"13.97","7":"51.65","8":"5.4","9":"70.52","10":"262.1"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
+</div>
+<p>Best results for each event are as follows:</p>
+<table>
+<thead>
+<tr class="header">
+<th>Event</th>
+<th align="right">Results</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>100 metres</td>
+<td align="right">10.44</td>
+</tr>
+<tr class="even">
+<td>Long jump</td>
+<td align="right">7.96m</td>
+</tr>
+<tr class="odd">
+<td>Shot put</td>
+<td align="right">16.36m</td>
+</tr>
+<tr class="even">
+<td>High jump</td>
+<td align="right">2.15m</td>
+</tr>
+<tr class="odd">
+<td>400 metres</td>
+<td align="right">46.81</td>
+</tr>
+<tr class="even">
+<td>110 metres hurdles</td>
+<td align="right">13.97</td>
+</tr>
+<tr class="odd">
+<td>Discus throw</td>
+<td align="right">51.65m</td>
+</tr>
+<tr class="even">
+<td>Pole vault</td>
+<td align="right">5.4m</td>
+</tr>
+<tr class="odd">
+<td>Javelin throw</td>
+<td align="right">70.52m</td>
+</tr>
+<tr class="even">
+<td>1500 metres</td>
+<td align="right">4:22.10</td>
+</tr>
+</tbody>
+</table>
+</div>
 </div>
 </div>
 </div>

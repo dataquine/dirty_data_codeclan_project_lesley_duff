@@ -13,7 +13,8 @@ author: "Lesley Duff"
 # Decathlon Data
 
 ## Introduction
-We have a dataset relating to a [Decathlon](https://en.wikipedia.org/wiki/Decathlon) event.
+We have a dataset `raw_data/decathlon.rds` relating to a 
+[Decathlon](https://en.wikipedia.org/wiki/Decathlon) event.
 
 > "The decathlon is a combined event in athletics consisting of ten track and field events...Performance is judged on a points system in each event, not by the position achieved"
 
@@ -30,38 +31,54 @@ There are ten events over two days:
 * Javelin throw
 * 1500 metres
 
-We have details of the athlete `rank` and `points` in each 
-`competition`.
+We have details of the results by each athlete for each of the ten events. 
+Also available is the athlete `rank` and `points` in each `competition`. 
 
 There are 32 different athletes in the results.
 
+The source of the data is [decathlon: Performance in decathlon (data)](https://rdrr.io/github/husson/FactoMineR/man/decathlon.html). This 
+source claims the details are from events in 2004.
 
 ## Assumptions
 
-* Due to the order and number of the columns I am assuming that this data is 
-a male decathlon. Women have a different order of decathlon events and are more 
-likely to compete in a seven event 
-[heptathlon](https://en.wikipedia.org/wiki/Heptathlon) instead.
-* Preliminary cleaning of data reveals we have data for two separate 
-competitions - `Decastar` and `OlympicG`.
+### Technical
 
+* A script `data_cleaning_scripts/cleaning.R` has been run prior to 
+analysis. The original dataset file `raw_data/decathlon.rds`  cleaned
+dataset as a new CSV file `clean_data/decathlon.csv`. CSV is a more accessible 
+format usable by a wider range of software. All further analysis was done using 
+the new CSV file.
+
+### Non-technical
+
+* Due to the order and number of the columns it is assumed that this data is 
+a male decathlon. Females compete in this event more rarely and have a 
+different order of decathlon events.
+* Preliminary cleaning of data reveals we have data for two separate 
+competitions - `Decastar` and `OlympicG` (Olympic Games).
 
 ## Cleaning
 
-* We renamed the column titles to remove full stops and start columns with numbers with an 'x' using `janitor::clean_names()`
-* We renamed `javeline` and `x110m_hurdle` to `javelin` and `x110m_hurdles` to better match the English descriptions of the names of the events.
-* We converted the original dataset file `raw_data/decathlon.rds` into a CSV 
-file to allow for wider usage. 
-The cleaned CSV file is at `clean_data/decathlon.csv`.
+The following changes to the dataset were made by the cleaning script `data_cleaning_scripts/cleaning.R`:
+
+* The column titles were renamed to remove full stops and start columns with 
+numbers with an 'x' using `janitor::clean_names()`
+* Columns `javeline` and `x110m_hurdle` were renamed to `javelin` and 
+`x110m_hurdles` to improve the match to the English descriptions of the names of
+the events.
+* The original data had row names with the names of the athletes. These were
+moved to be a new column `athlete`.
 
 ## Analysis questions   
 
 ```{r}
 library(here)
 library(tidyverse)
+```
 
-# use this to set the path to the data file
-decathlon_data <- read_csv(here("clean_data/decathlon.csv"))
+```{r}
+# read cleaned decathlon dataset
+decathlon_data <- read_csv(here::here("clean_data/decathlon.csv"))
 ```
 
 ### Who had the longest long jump seen in the data?
@@ -69,11 +86,10 @@ decathlon_data <- read_csv(here("clean_data/decathlon.csv"))
 ```{r}
 decathlon_data %>%
   select(athlete, long_jump) %>%
-  arrange(desc(long_jump)) %>%
   slice_max(long_jump, n = 1)
 ```
 
-Clay had the longest long jump at 7.96m.
+**Clay** had the longest long jump at **7.96m**.
 
 ### What was the average 100m time in each competition?
 
@@ -84,24 +100,49 @@ decathlon_data %>%
   summarise(average_100m_time = mean(x100m, na.rm = TRUE))
 ```
 
+The average 100m time in **Decastar** was **11.17538s**.  
+The average 100m time in **Olympic Games** was **10.91571s**.
+
 ### Who had the highest total points across both competitions?
+
 ```{r}
 decathlon_data %>%
-  select(athlete, points, competition) %>%
-  slice_max(points, n = 1)
+  select(athlete, points) %>%
+  group_by(athlete) %>% 
+  summarise(total_points = sum(points)) %>% 
+  slice_max(total_points, n = 1)
 ```
+**Sebrle** has the highest total points across both competitions, **17,110**.
 
+This is assuming that we are totaling the points obtained by each athlete in all
+competitions they participated in. Some athletes only participated in one 
+competition.
 
 ### What was the shot-put scores for the top three competitors in each competition?
 
 ```{r}
 decathlon_data %>%
-  select(shot_put, athlete, competition) %>%
+  select(shot_put, athlete, competition, points) %>%
   group_by(competition) %>%
-  slice_max(shot_put, n = 3)
+  slice_max(points, n = 3)
 ```
 
+In **Decastar** shot-put scores for the top three competitors were 
+
+1. 14.83m - Sebrle
+2. 14.26m - Clay
+3. 14.77m - Karpov	
+
+In **Olympic Games** shot-put scores for the top three competitors were 
+
+1. 16.36 - Sebrle
+2. 15.23 - Clay
+3. 15.93 - Karpov
+
+This is assuming that we are measuring 'top' as highest points by a competitor.
+
 ### What was the average points for competitors who ran the 400m in less than 50 seconds vs. those than ran 400m in more than 50 seconds?
+
 ```{r}
 decathlon_data %>%
   select(points, x400m) %>%
@@ -113,22 +154,68 @@ decathlon_data %>%
   filter(x400m > 50) %>%
   summarise(average_points_x400m_over_50s = mean(points))
 ```
+average points for competitors who ran the 400m in less than 50 seconds - 
+**8120.483**.  
+vs.  
+average points for competitors who ran 400m in more than 50 seconds - 
+**7727.167**
+
 
 ## Other observations
 
-### How many competitions did athletes take part in?
+### How many athletes took part in each competition?
+
+```{r}
+decathlon_data %>%
+  group_by(competition) %>% 
+  summarise(num_athletes = n())
+```
+**13** athletes took part in **Decastar**.  
+**28** athletes took part in **Olympic Games**.
+
+### Which athletes took part in both competitions?
 
 ```{r}
 decathlon_data %>%
   select(athlete, competition) %>% 
   group_by(athlete) %>% 
-  summarise(number_competition = n()) %>% 
-  arrange(desc(number_competition))
+  summarise(number_competitions = n()) %>% 
+  filter(number_competitions == 2)
 ```
-## Which athlete had fastest 100m
+The following athletes took part in both competitions:
+
+**Barras, Bernard, Clay, Hernu, Karpov, Nool, Sebrle, Warners, Zsivoczky**
+
+### Results by event
+
+#### Best results for each event
 ```{r}
 decathlon_data %>%
-  select(athlete, x100m) %>% 
-  slice_min(x100m, n = 1)
+  select(x100m, long_jump, shot_put, high_jump, x400m, x110m_hurdles, discus,
+         pole_vault, javelin, x1500m) %>% 
+  summarise(best_100m = min(x100m),
+            best_long_jump = max(long_jump),
+            best_shot_put = max(shot_put),
+            best_high_jump = max(high_jump),
+            best_400m = min(x400m),
+            best_110m_hurdles = min(x110m_hurdles),
+            best_discus = max(discus),
+            best_pole_vault = max(pole_vault),
+            best_javelin = max(javelin),
+            best_1500m = min(x1500m)
+            )
 ```
+Best results for each event are as follows:
 
+| Event              | Results | 
+| -------------------| -------: |
+| 100 metres         | 10.44 |
+| Long jump          | 7.96m |
+| Shot put           | 16.36m |
+| High jump          | 2.15m |
+| 400 metres         | 46.81 |
+| 110 metres hurdles | 13.97 |
+| Discus throw       | 51.65m |
+| Pole vault         |  5.4m |
+| Javelin throw      | 70.52m	|
+| 1500 metres        | 4:22.10 |
