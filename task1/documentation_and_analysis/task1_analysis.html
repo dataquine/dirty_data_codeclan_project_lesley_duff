@@ -11,7 +11,7 @@
 
 <meta name="author" content="Lesley Duff" />
 
-<meta name="date" content="2023-07-31" />
+<meta name="date" content="2023-08-01" />
 
 <title>Task 1 - Decathlon Data</title>
 
@@ -2753,7 +2753,7 @@ border-radius: 0px;
 <h1 class="title toc-ignore">Task 1 - Decathlon Data</h1>
 <h3 class="subtitle">Dirty Data Project</h3>
 <h4 class="author">Lesley Duff</h4>
-<h4 class="date">2023-07-31</h4>
+<h4 class="date">2023-08-01</h4>
 
 </div>
 
@@ -2850,11 +2850,11 @@ questions</h2>
 ## ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
 <pre class="r"><code># read cleaned decathlon dataset
 decathlon_data &lt;- read_csv(here::here(&quot;clean_data/decathlon.csv&quot;))</code></pre>
-<pre><code>## Rows: 41 Columns: 14
+<pre><code>## Rows: 410 Columns: 6
 ## ── Column specification ────────────────────────────────────────────────────────
 ## Delimiter: &quot;,&quot;
-## chr  (2): athlete, competition
-## dbl (12): x100m, long_jump, shot_put, high_jump, x400m, x110m_hurdles, discu...
+## chr (3): athlete, competition, decathlon_event
+## dbl (3): rank, points, result
 ## 
 ## ℹ Use `spec()` to retrieve the full column specification for this data.
 ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
@@ -2862,11 +2862,12 @@ decathlon_data &lt;- read_csv(here::here(&quot;clean_data/decathlon.csv&quot;))<
 <h3><span class="header-section-number">1.4.1</span> Who had the longest
 long jump seen in the data?</h3>
 <pre class="r"><code>decathlon_data %&gt;%
-  select(athlete, long_jump) %&gt;%
-  slice_max(long_jump, n = 1)</code></pre>
+  select(athlete, decathlon_event, result) %&gt;%
+  filter(decathlon_event == &quot;long jump&quot;) %&gt;%
+  slice_max(result, n = 1)</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":["athlete"],"name":[1],"type":["chr"],"align":["left"]},{"label":["long_jump"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"Clay","2":"7.96"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["athlete"],"name":[1],"type":["chr"],"align":["left"]},{"label":["decathlon_event"],"name":[2],"type":["chr"],"align":["left"]},{"label":["result"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"Clay","2":"long jump","3":"7.96"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 <p><strong>Clay</strong> had the longest long jump at
@@ -2876,9 +2877,10 @@ long jump seen in the data?</h3>
 <h3><span class="header-section-number">1.4.2</span> What was the
 average 100m time in each competition?</h3>
 <pre class="r"><code>decathlon_data %&gt;%
-  select(x100m, competition) %&gt;%
+  select(decathlon_event, competition, result) %&gt;%
+  filter(decathlon_event == &quot;100m&quot;) %&gt;%
   group_by(competition) %&gt;%
-  summarise(average_100m_time = mean(x100m, na.rm = TRUE))</code></pre>
+  summarise(average_100m_time = mean(result, na.rm = TRUE))</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["competition"],"name":[1],"type":["chr"],"align":["left"]},{"label":["average_100m_time"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"Decastar","2":"11.17538"},{"1":"OlympicG","2":"10.91571"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
@@ -2893,13 +2895,15 @@ The average 100m time in <strong>Olympic Games</strong> was
 <h3><span class="header-section-number">1.4.3</span> Who had the highest
 total points across both competitions?</h3>
 <pre class="r"><code>decathlon_data %&gt;%
-  select(athlete, points) %&gt;%
-  group_by(athlete) %&gt;% 
-  summarise(total_points = sum(points)) %&gt;% 
-  slice_max(total_points, n = 1)</code></pre>
+  select(athlete, points, competition) %&gt;%
+  # lots of duplicates, get rid of them
+  unique() %&gt;%
+  group_by(athlete) %&gt;%
+  summarise(highest_total_points = sum(points, na.rm = TRUE)) %&gt;%
+  slice_max(highest_total_points, n = 1)</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":["athlete"],"name":[1],"type":["chr"],"align":["left"]},{"label":["total_points"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"Sebrle","2":"17110"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["athlete"],"name":[1],"type":["chr"],"align":["left"]},{"label":["highest_total_points"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"Sebrle","2":"17110"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 <p><strong>Sebrle</strong> has the highest total points across both
@@ -2912,12 +2916,13 @@ participated in one competition.</p>
 <h3><span class="header-section-number">1.4.4</span> What was the
 shot-put scores for the top three competitors in each competition?</h3>
 <pre class="r"><code>decathlon_data %&gt;%
-  select(shot_put, athlete, competition, points) %&gt;%
+  select(decathlon_event, score = result, athlete, competition, rank, points) %&gt;%
+  filter(decathlon_event == &quot;shot put&quot;) %&gt;%
   group_by(competition) %&gt;%
   slice_max(points, n = 3)</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":["shot_put"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["athlete"],"name":[2],"type":["chr"],"align":["left"]},{"label":["competition"],"name":[3],"type":["chr"],"align":["left"]},{"label":["points"],"name":[4],"type":["dbl"],"align":["right"]}],"data":[{"1":"14.83","2":"Sebrle","3":"Decastar","4":"8217"},{"1":"14.26","2":"Clay","3":"Decastar","4":"8122"},{"1":"14.77","2":"Karpov","3":"Decastar","4":"8099"},{"1":"16.36","2":"Sebrle","3":"OlympicG","4":"8893"},{"1":"15.23","2":"Clay","3":"OlympicG","4":"8820"},{"1":"15.93","2":"Karpov","3":"OlympicG","4":"8725"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["decathlon_event"],"name":[1],"type":["chr"],"align":["left"]},{"label":["score"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["athlete"],"name":[3],"type":["chr"],"align":["left"]},{"label":["competition"],"name":[4],"type":["chr"],"align":["left"]},{"label":["rank"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["points"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"shot put","2":"14.83","3":"Sebrle","4":"Decastar","5":"1","6":"8217"},{"1":"shot put","2":"14.26","3":"Clay","4":"Decastar","5":"2","6":"8122"},{"1":"shot put","2":"14.77","3":"Karpov","4":"Decastar","5":"3","6":"8099"},{"1":"shot put","2":"16.36","3":"Sebrle","4":"OlympicG","5":"1","6":"8893"},{"1":"shot put","2":"15.23","3":"Clay","4":"OlympicG","5":"2","6":"8820"},{"1":"shot put","2":"15.93","3":"Karpov","4":"OlympicG","5":"3","6":"8725"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 <p>In <strong>Decastar</strong> shot-put scores for the top three
@@ -2935,34 +2940,34 @@ competitors were</p>
 <li>15.93 - Karpov</li>
 </ol>
 <p>This is assuming that we are measuring ‘top’ as highest points by a
-competitor.</p>
+competitor in a competition.</p>
 </div>
 <div id="what-was-the-average-points-for-competitors-who-ran-the-400m-in-less-than-50-seconds-vs.-those-than-ran-400m-in-more-than-50-seconds" class="section level3" number="1.4.5">
 <h3><span class="header-section-number">1.4.5</span> What was the
 average points for competitors who ran the 400m in less than 50 seconds
 vs. those than ran 400m in more than 50 seconds?</h3>
 <pre class="r"><code>decathlon_data %&gt;%
-  select(points, x400m) %&gt;%
-  filter(x400m &lt; 50) %&gt;%
-  summarise(average_points_x400m_under_50s = mean(points))</code></pre>
+  select(points, decathlon_event, result) %&gt;%
+  filter(decathlon_event == &quot;400m&quot; &amp; result &lt; 50) %&gt;%
+  summarise(average_points_x400m_under_50s = mean(points, na.rm = TRUE))</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["average_points_x400m_under_50s"],"name":[1],"type":["dbl"],"align":["right"]}],"data":[{"1":"8120.483"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 <pre class="r"><code>decathlon_data %&gt;%
-  select(points, x400m) %&gt;%
-  filter(x400m &gt; 50) %&gt;%
-  summarise(average_points_x400m_over_50s = mean(points))</code></pre>
+  select(points, decathlon_event, result) %&gt;%
+  filter(decathlon_event == &quot;400m&quot; &amp; result &gt; 50) %&gt;%
+  summarise(average_points_x400m_over_50s = mean(points, na.rm = TRUE))</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["average_points_x400m_over_50s"],"name":[1],"type":["dbl"],"align":["right"]}],"data":[{"1":"7727.167"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 <p>average points for competitors who ran the 400m in less than 50
-seconds - <strong>8120.483</strong>.<br />
+seconds <strong>8120.483</strong><br />
 vs.<br />
-average points for competitors who ran 400m in more than 50 seconds -
+average points for competitors who ran 400m in more than 50 seconds
 <strong>7727.167</strong></p>
 </div>
 </div>
@@ -2973,7 +2978,10 @@ observations</h2>
 <h3><span class="header-section-number">1.5.1</span> How many athletes
 took part in each competition?</h3>
 <pre class="r"><code>decathlon_data %&gt;%
-  group_by(competition) %&gt;% 
+  select(athlete, competition) %&gt;%
+  # remove duplicates
+  unique() %&gt;%
+  group_by(competition) %&gt;%
   summarise(num_athletes = n())</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
@@ -2989,10 +2997,12 @@ Games</strong>.</p>
 <h3><span class="header-section-number">1.5.2</span> Which athletes took
 part in both competitions?</h3>
 <pre class="r"><code>decathlon_data %&gt;%
-  select(athlete, competition) %&gt;% 
-  group_by(athlete) %&gt;% 
-  summarise(number_competitions = n()) %&gt;% 
-  filter(number_competitions == 2)</code></pre>
+  select(athlete, competition) %&gt;%
+  unique() %&gt;%
+  group_by(athlete) %&gt;%
+  summarise(number_competitions = n()) %&gt;%
+  filter(number_competitions == 2) %&gt;%
+  arrange(athlete)</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["athlete"],"name":[1],"type":["chr"],"align":["left"]},{"label":["number_competitions"],"name":[2],"type":["int"],"align":["right"]}],"data":[{"1":"Barras","2":"2"},{"1":"Bernard","2":"2"},{"1":"Clay","2":"2"},{"1":"Hernu","2":"2"},{"1":"Karpov","2":"2"},{"1":"Nool","2":"2"},{"1":"Sebrle","2":"2"},{"1":"Warners","2":"2"},{"1":"Zsivoczky","2":"2"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
@@ -3005,26 +3015,106 @@ Zsivoczky</strong></p>
 <div id="results-by-event" class="section level3" number="1.5.3">
 <h3><span class="header-section-number">1.5.3</span> Results by
 event</h3>
-<div id="best-results-for-each-event" class="section level4" number="1.5.3.1">
-<h4><span class="header-section-number">1.5.3.1</span> Best results for
-each event</h4>
-<pre class="r"><code>decathlon_data %&gt;%
-  select(x100m, long_jump, shot_put, high_jump, x400m, x110m_hurdles, discus,
-         pole_vault, javelin, x1500m) %&gt;% 
-  summarise(best_100m = min(x100m),
-            best_long_jump = max(long_jump),
-            best_shot_put = max(shot_put),
-            best_high_jump = max(high_jump),
-            best_400m = min(x400m),
-            best_110m_hurdles = min(x110m_hurdles),
-            best_discus = max(discus),
-            best_pole_vault = max(pole_vault),
-            best_javelin = max(javelin),
-            best_1500m = min(x1500m)
-            )</code></pre>
+<p>The best result of each event across both competitions are as
+follows.</p>
+<pre class="r"><code># 100m
+decathlon_data %&gt;%
+  select(decathlon_event, result) %&gt;%
+  filter(decathlon_event == &quot;100m&quot;) %&gt;%
+  summarise(best_100m = min(result))</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":["best_100m"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["best_long_jump"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["best_shot_put"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["best_high_jump"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["best_400m"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["best_110m_hurdles"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["best_discus"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["best_pole_vault"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["best_javelin"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["best_1500m"],"name":[10],"type":["dbl"],"align":["right"]}],"data":[{"1":"10.44","2":"7.96","3":"16.36","4":"2.15","5":"46.81","6":"13.97","7":"51.65","8":"5.4","9":"70.52","10":"262.1"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["best_100m"],"name":[1],"type":["dbl"],"align":["right"]}],"data":[{"1":"10.44"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<pre class="r"><code># long jump
+decathlon_data %&gt;%
+  select(decathlon_event, result) %&gt;%
+  filter(decathlon_event == &quot;long jump&quot;) %&gt;%
+  summarise(best_long_jump = max(result))</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["best_long_jump"],"name":[1],"type":["dbl"],"align":["right"]}],"data":[{"1":"7.96"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<pre class="r"><code># shot put
+decathlon_data %&gt;%
+  select(decathlon_event, result) %&gt;%
+  filter(decathlon_event == &quot;shot put&quot;) %&gt;%
+  summarise(best_shot_put = max(result))</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["best_shot_put"],"name":[1],"type":["dbl"],"align":["right"]}],"data":[{"1":"16.36"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<pre class="r"><code># high jump
+decathlon_data %&gt;%
+  select(decathlon_event, result) %&gt;%
+  filter(decathlon_event == &quot;high jump&quot;) %&gt;%
+  summarise(best_high_jump = max(result))</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["best_high_jump"],"name":[1],"type":["dbl"],"align":["right"]}],"data":[{"1":"2.15"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<pre class="r"><code># 400m
+decathlon_data %&gt;%
+  select(decathlon_event, result) %&gt;%
+  filter(decathlon_event == &quot;400m&quot;) %&gt;%
+  summarise(best_400m = min(result))</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["best_400m"],"name":[1],"type":["dbl"],"align":["right"]}],"data":[{"1":"46.81"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<pre class="r"><code># 110m hurdles
+decathlon_data %&gt;%
+  select(decathlon_event, result) %&gt;%
+  filter(decathlon_event == &quot;110m hurdles&quot;) %&gt;%
+  summarise(best_110m_hurdles = min(result))</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["best_110m_hurdles"],"name":[1],"type":["dbl"],"align":["right"]}],"data":[{"1":"13.97"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<pre class="r"><code># discus
+decathlon_data %&gt;%
+  select(decathlon_event, result) %&gt;%
+  filter(decathlon_event == &quot;discus&quot;) %&gt;%
+  summarise(best_discus = max(result))</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["best_discus"],"name":[1],"type":["dbl"],"align":["right"]}],"data":[{"1":"51.65"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<pre class="r"><code># pole vault
+decathlon_data %&gt;%
+  select(decathlon_event, result) %&gt;%
+  filter(decathlon_event == &quot;pole vault&quot;) %&gt;%
+  summarise(best_pole_vault = max(result))</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["best_pole_vault"],"name":[1],"type":["dbl"],"align":["right"]}],"data":[{"1":"5.4"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<pre class="r"><code># javelin
+decathlon_data %&gt;%
+  select(decathlon_event, result) %&gt;%
+  filter(decathlon_event == &quot;javelin&quot;) %&gt;%
+  summarise(best_javelin = max(result))</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["best_javelin"],"name":[1],"type":["dbl"],"align":["right"]}],"data":[{"1":"70.52"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<pre class="r"><code># 1500m
+decathlon_data %&gt;%
+  select(decathlon_event, result) %&gt;%
+  filter(decathlon_event == &quot;1500m&quot;) %&gt;%
+  summarise(best_1500m = min(result))</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["best_1500m"],"name":[1],"type":["dbl"],"align":["right"]}],"data":[{"1":"262.1"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 <p>Best results for each event are as follows:</p>
@@ -3078,7 +3168,6 @@ each event</h4>
 </tr>
 </tbody>
 </table>
-</div>
 </div>
 </div>
 </div>
