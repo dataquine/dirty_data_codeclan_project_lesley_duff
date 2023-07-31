@@ -3,14 +3,23 @@
 # Title: Clean decathlon data
 # Date Created: 2023-07-30
 # Description:
-#   Data provided as a file "decathlon.rds"
+#   Data provided as in RDS format is read in, cleaned and output as a CSV file.
+# 
+# Assumptions:
+#   Input: the data file is located at "raw_data/decathlon.rds"
+#   Output: we assume a folder "clean_data" has already been created. 
+#     The cleaned CSV file is output to "clean_data/decathlon.csv"
 
 library(janitor)
 library(tidyverse)
 
 #?read_rds()
 
+# read original decathlon dataset
 decathlon_data <- read_rds("raw_data/decathlon.rds")
+
+# Path where cleaned CSV output will be written
+decathlon_csv_path <- "clean_data/decathlon.csv"
 
 dim(decathlon_data)# 41 rows, 13 columns
 head(decathlon_data)
@@ -47,9 +56,8 @@ str(clean_decathlon_data)
 
 # This dataset covers results for two separate competitions
 
-# We notice that the a couple of  column names appears to be slightly different
-# from expected
-# I'll rename 'javeline' to 'javelin'  and 
+# A couple of  column names appear to be slightly different from expected
+# Rename 'javeline' to 'javelin'  and 
 # 'x110m_hurdle' -> 'x110m_hurdles' before more processing
 clean_decathlon_data <- clean_decathlon_data %>% 
   rename("javelin" = "javeline") %>% 
@@ -57,22 +65,20 @@ clean_decathlon_data <- clean_decathlon_data %>%
   
 # The data is in rows with row names indicating which athlete
 # Suggest moving these names into a column instead. They are also
-# a mix of sentence case for OlympicG and UPPERCASE for Decastar event.
-
-# Turn row names into a column 'athlete'
+# a mix of Title case for OlympicG and UPPERCASE for Decastar event.
 decathlon_data <- clean_decathlon_data %>% 
+  # Turn row names into a column 'athlete'
   rownames_to_column(var = "athlete") %>% 
   
-  # Convert uppercase to title case
+  # Convert e.g. original to title case so they are all the same for consistency
   mutate(athlete = str_to_title(athlete))
 
 length(unique(decathlon_data$athlete))
 # There are 32 different athletes in the results
 
 # Write out clean data
-# I'm choosing to convert the original .rds into CSV instead for wider
-# usage.
-write_csv(decathlon_data, "clean_data/decathlon.csv")
+# The original .rds format is converted into CSV instead for wider usage.
+write_csv(decathlon_data, decathlon_csv_path)
 
 
 
