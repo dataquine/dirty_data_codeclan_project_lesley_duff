@@ -114,6 +114,28 @@ combine_candy_ratings <- function(list_candy_ratings){
   # 468510, 118290, 175555
 }
 
+# Exploratory examination returning list of dataframes
+# 1 - Candy names by popularity
+# 2 - Candy names by alphabetical name
+examine_candy_ratings <- function(candy_ratings) {
+  popularity_candy_names <- candy_ratings %>% 
+    select(candy_name) %>% 
+    group_by(candy_name) %>% 
+    summarise(num_candy = n()) %>% 
+    arrange(desc(num_candy))
+  
+  #View(popularity_candy_names)
+  
+  alphabetical_candy_names <- candy_ratings %>% 
+    select(candy_name) %>% 
+    group_by(candy_name) %>% 
+    summarise(num_candy = n()) %>% 
+    arrange(candy_name)
+
+  #View(alphabetical_candy_names)
+  return(list(popularity_candy_names, alphabetical_candy_names))
+}
+
 candy_ratings_2015 <- get_candy_ratings_2015(raw_2015)
 dim(candy_ratings_2015)
 # View(candy_ratings_2015)
@@ -132,8 +154,10 @@ list_candy_ratings = list(candy_ratings_2015,
                           candy_ratings_2017)
 
 candy_ratings <- combine_candy_ratings(list_candy_ratings)
-dim (candy_ratings) # 762355      2
+#dim (candy_ratings) # 762355      2
+#View(candy_ratings)
 
-
-
+examined <- examine_candy_ratings(candy_ratings)
+#examined[[1]]
+#examined[[2]]
 
