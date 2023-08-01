@@ -19,16 +19,57 @@ raw_2015 <- read_excel("raw_data/boing-boing-candy-2015.xlsx")
 raw_2016 <- read_excel("raw_data/boing-boing-candy-2016.xlsx")
 raw_2017 <- read_excel("raw_data/boing-boing-candy-2017.xlsx")
 
-View(raw_2015)
-View(raw_2016)
-View(raw_2017)
+#View(raw_2015)
+#View(raw_2016)
+#View(raw_2017)
 
+# Get candy ratings from raw data for 2015
+# Produce dataframe of two columns candy_name and candy_rating
+get_candy_ratings_2015 <- function(raw_data) {
+  # Retrieve candy ratings columns
+  candy_ratings <- raw_data %>% 
+    select("[Butterfinger]":"[York Peppermint Patties]") 
+    
+  # Turn wide data into long, Analysis asks Don’t count missing values
+  # So will drop NAs
+  candy_ratings_long_no_na <- candy_ratings %>% 
+    # ?pivot_longer
+    pivot_longer("[Butterfinger]":"[York Peppermint Patties]",
+                 names_to = "candy_name",
+                 values_to = "candy_rating",
+                 values_drop_na = TRUE)
+   
+  #View(candy_ratings_long_na)
+  
+  return(candy_ratings_long_no_na)
+}
 
-names_raw_2015 <- names(raw_2015)
-names_raw_2015
+# Get candy ratings from raw data for 2016
+get_candy_ratings_2016 <- function(raw_data) {
+  candy_ratings <- raw_data %>% 
+    select("[100 Grand Bar]":"[York Peppermint Patties]")
+  return(candy_ratings)
+}
 
-names_raw_2016 <- names(raw_2016)
-names_raw_2016
+# Get candy ratings from raw data for 2017
+get_candy_ratings_2017 <- function(raw_data) {
+  candy_ratings <- raw_data %>% 
+    select("[100 Grand Bar]":"[York Peppermint Patties]")
+  return(candy_ratings)
+}
 
-names_raw_2017 <- names(raw_2017)
-names_raw_2017 
+#names_raw_2015 <- names(raw_2015)
+#names_raw_2015
+
+df_candy_ratings_2015 <- get_candy_ratings_2015(raw_2015)
+#df_candy_ratings_2016 <- get_candy_ratings_2016(raw_2016)
+dim(df_candy_ratings_2015)
+View(df_candy_ratings_2015)
+
+#dim(df_candy_ratings_2016)
+
+#names_raw_2016 <- names(raw_2016)
+#names_raw_2016
+
+#names_raw_2017 <- names(raw_2017)
+#names_raw_2017 
