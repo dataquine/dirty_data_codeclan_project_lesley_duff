@@ -81,15 +81,19 @@ get_candy_ratings_2016 <- function(raw_data) {
       age = `How old are you?`,
       trick_or_treating = `Are you going actually going trick or treating yourself?`,
       gender = `Your gender:`,
+      country = `Which country do you live in?`,
       "[100 Grand Bar]":"[York Peppermint Patties]"
     )
 
   # Clean up age field - non numeric become NA
+  #?mutate
   candy_ratings <- candy_ratings %>%
     mutate(
       age = as.numeric(age),
       year = 2016
-    )
+    ) %>% 
+    # Move column to same order as 2015
+    relocate(country, .after = year)
 
   # Turn wide data into long, Analysis asks Don’t count missing values
   # So will drop NAs
@@ -181,13 +185,13 @@ examine_candy_ratings <- function(candy_ratings) {
 
 candy_ratings_2015 <- get_candy_ratings_2015(raw_2015)
 # dim(candy_ratings_2015)
-View(candy_ratings_2015)
-stop("OK")
+#View(candy_ratings_2015)
 
 candy_ratings_2016 <- get_candy_ratings_2016(raw_2016)
 # dim(candy_ratings_2016)
-# View(candy_ratings_2016)
-
+View(candy_ratings_2016)
+print(unique(candy_ratings_2016$country))
+stop("OK")
 candy_ratings_2017 <- get_candy_ratings_2017(raw_2017)
 # dim(candy_ratings_2017)
 #View(candy_ratings_2017)
