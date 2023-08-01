@@ -150,6 +150,11 @@ get_candy_ratings_2017 <- function(raw_data) {
       values_to = "candy_rating",
       values_drop_na = TRUE
     ) %>%
+    mutate(candy_popularity = case_when(
+      candy_rating == "DESPAIR" ~ -1,
+      candy_rating == "JOY" ~ 1,
+      candy_rating == "MEH" ~ 0
+    ))%>%
     # Check that we don't have NAs in pivoted columns
     verify(!is.na(candy_name)) %>%
     verify(!is.na(candy_rating))
@@ -202,8 +207,6 @@ candy_ratings_2015 <- get_candy_ratings_2015(raw_2015)
 candy_ratings_2016 <- get_candy_ratings_2016(raw_2016)
 # dim(candy_ratings_2016)
 #View(candy_ratings_2016)
-print(unique(candy_ratings_2016$candy_rating))
-stop("OK")
 
 candy_ratings_2017 <- get_candy_ratings_2017(raw_2017)
 # dim(candy_ratings_2017)
