@@ -40,14 +40,11 @@ get_candy_ratings_2015 <- function(raw_data) {
       "[Sea-salt flavored stuff, probably chocolate, since this is the \"it\" flavor of the year]":"[Necco Wafers]"
     )
  
-  # Clean up age field - non numeric become NA
   candy_ratings <- candy_ratings %>% 
-    mutate(age = as.numeric(age))
-  
-  #?as.logical()
-  # Clean up age field - non numeric become NA
- # candy_ratings <- candy_ratings %>% 
-  #  mutate(trick_or_treating = as.logical(trick_or_treating))
+    # Clean up age field - non numeric become NA
+    mutate(
+      age = as.numeric(age),
+      gender = NA)
 
   # Turn wide data into long, Analysis asks Don’t count missing values
   # So will drop NAs
@@ -170,8 +167,8 @@ examine_candy_ratings <- function(candy_ratings) {
 
 candy_ratings_2015 <- get_candy_ratings_2015(raw_2015)
 # dim(candy_ratings_2015) 
-#View(candy_ratings_2015)
-
+View(candy_ratings_2015)
+stop("OK")
 candy_ratings_2016 <- get_candy_ratings_2016(raw_2016)
 #dim(candy_ratings_2016)
 #View(candy_ratings_2016)
