@@ -76,6 +76,7 @@ get_candy_ratings_2016 <- function(raw_data) {
     select(
       age = `How old are you?`,
       trick_or_treating = `Are you going actually going trick or treating yourself?`,
+      gender = `Your gender:`,
       "[100 Grand Bar]":"[York Peppermint Patties]")
 
   # Clean up age field - non numeric become NA
@@ -167,11 +168,12 @@ examine_candy_ratings <- function(candy_ratings) {
 
 candy_ratings_2015 <- get_candy_ratings_2015(raw_2015)
 # dim(candy_ratings_2015) 
-View(candy_ratings_2015)
-stop("OK")
+#View(candy_ratings_2015)
+
 candy_ratings_2016 <- get_candy_ratings_2016(raw_2016)
 #dim(candy_ratings_2016)
-#View(candy_ratings_2016)
+View(candy_ratings_2016)
+stop("OK")
 
 candy_ratings_2017 <- get_candy_ratings_2017(raw_2017)
 #dim(candy_ratings_2017)
