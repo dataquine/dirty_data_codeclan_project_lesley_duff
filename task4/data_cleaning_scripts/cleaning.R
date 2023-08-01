@@ -40,6 +40,7 @@ get_candy_ratings_2015 <- function(raw_data) {
     # ?pivot_longer
     pivot_longer("[Butterfinger]":"[York Peppermint Patties]",
       names_to = "candy_name",
+      names_pattern = "^\\[(.*)\\]$",
       values_to = "candy_rating",
       values_drop_na = TRUE
     ) %>%
@@ -94,16 +95,16 @@ get_candy_ratings_2017 <- function(raw_data) {
   return(candy_ratings_2017_long)
 }
 
-#df_candy_ratings_2015 <- get_candy_ratings_2015(raw_2015)
+df_candy_ratings_2015 <- get_candy_ratings_2015(raw_2015)
 # dim(df_candy_ratings_2015)
-# View(df_candy_ratings_2015)
+ View(df_candy_ratings_2015)
 
 #df_candy_ratings_2016 <- get_candy_ratings_2016(raw_2016)
 # dim(df_candy_ratings_2016)
 #View(df_candy_ratings_2016)
 
-df_candy_ratings_2017 <- get_candy_ratings_2017(raw_2017)
-View(df_candy_ratings_2017)
+#df_candy_ratings_2017 <- get_candy_ratings_2017(raw_2017)
+#View(df_candy_ratings_2017)
 
 
 
