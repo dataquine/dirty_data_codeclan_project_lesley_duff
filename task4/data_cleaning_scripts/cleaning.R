@@ -32,13 +32,19 @@ raw_2017 <- read_excel("raw_data/boing-boing-candy-2017.xlsx")
 get_candy_ratings_2015 <- function(raw_data) {
   # Retrieve candy ratings columns
   candy_ratings <- raw_data %>%
-    select("[Butterfinger]":"[York Peppermint Patties]")
+    select(
+      "[Butterfinger]":"[York Peppermint Patties]",
+      "[Sea-salt flavored stuff, probably chocolate, since this is the \"it\" flavor of the year]":"[Necco Wafers]"
+    )
 
   # Turn wide data into long, Analysis asks Don’t count missing values
   # So will drop NAs
   candy_ratings_2015_long <- candy_ratings %>%
     # ?pivot_longer
-    pivot_longer("[Butterfinger]":"[York Peppermint Patties]",
+    pivot_longer(
+      cols = c(
+        "[Butterfinger]":"[York Peppermint Patties]",
+        "[Sea-salt flavored stuff, probably chocolate, since this is the \"it\" flavor of the year]":"[Necco Wafers]"),
       names_to = "candy_name",
       # Remove leading and trailing square brackets
       names_pattern = "^\\[(.*)\\]$",
@@ -137,7 +143,7 @@ examine_candy_ratings <- function(candy_ratings) {
 }
 
 candy_ratings_2015 <- get_candy_ratings_2015(raw_2015)
-dim(candy_ratings_2015)
+dim(candy_ratings_2015) #  478507      2
 # View(candy_ratings_2015)
 
 candy_ratings_2016 <- get_candy_ratings_2016(raw_2016)
