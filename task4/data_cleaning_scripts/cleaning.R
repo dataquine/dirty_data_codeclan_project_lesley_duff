@@ -34,9 +34,20 @@ get_candy_ratings_2015 <- function(raw_data) {
   # Retrieve candy ratings columns
   candy_ratings <- raw_data %>%
     select(
+      age = `How old are you?`,
+      trick_or_treating = `Are you going actually going trick or treating yourself?`,
       "[Butterfinger]":"[York Peppermint Patties]",
       "[Sea-salt flavored stuff, probably chocolate, since this is the \"it\" flavor of the year]":"[Necco Wafers]"
     )
+ 
+  # Clean up age field - non numeric become NA
+  candy_ratings <- candy_ratings %>% 
+    mutate(age = as.numeric(age))
+  
+  #?as.logical()
+  # Clean up age field - non numeric become NA
+ # candy_ratings <- candy_ratings %>% 
+  #  mutate(trick_or_treating = as.logical(trick_or_treating))
 
   # Turn wide data into long, Analysis asks Don’t count missing values
   # So will drop NAs
@@ -61,21 +72,19 @@ get_candy_ratings_2015 <- function(raw_data) {
   return(candy_ratings_2015_long)
 }
 
-get_candy_data_2015 <- function(raw_data) {
-  candy_ratings_2015 <- get_candy_ratings_2015(raw_2015)
-  dim(candy_ratings_2015) #  478507      2
-  
-  candy_data_2015 <- candy_ratings_2015
-  
-  return (candy_data_2015)
-}
-
 # Get candy ratings from raw data for 2016
 # Produce dataframe of two columns candy_name and candy_rating
 get_candy_ratings_2016 <- function(raw_data) {
   candy_ratings <- raw_data %>%
-    select("[100 Grand Bar]":"[York Peppermint Patties]")
+    select(
+      age = `How old are you?`,
+      trick_or_treating = `Are you going actually going trick or treating yourself?`,
+      "[100 Grand Bar]":"[York Peppermint Patties]")
 
+  # Clean up age field - non numeric become NA
+  candy_ratings <- candy_ratings %>% 
+    mutate(age = as.numeric(age))
+  
   # Turn wide data into long, Analysis asks Don’t count missing values
   # So will drop NAs
   candy_ratings_2016_long <- candy_ratings %>%
@@ -98,7 +107,14 @@ get_candy_ratings_2016 <- function(raw_data) {
 get_candy_ratings_2017 <- function(raw_data) {
 #  view(raw_data)
   candy_ratings <- raw_data %>%
-    select("Q6 | 100 Grand Bar":"Q6 | York Peppermint Patties")
+    select(
+      age = `Q3: AGE`,
+      trick_or_treating = `Q1: GOING OUT?`,
+      "Q6 | 100 Grand Bar":"Q6 | York Peppermint Patties")
+
+  # Clean up age field - non numeric become NA, field type becomes numeric
+  candy_ratings <- candy_ratings %>% 
+    mutate(age = as.numeric(age))
   
   candy_ratings_2017_long <- candy_ratings %>%
     pivot_longer("Q6 | 100 Grand Bar":"Q6 | York Peppermint Patties",
@@ -152,19 +168,17 @@ examine_candy_ratings <- function(candy_ratings) {
   return(list(popularity_candy_names, alphabetical_candy_names))
 }
 
-#candy_ratings_2015 <- get_candy_ratings_2015(raw_2015)
-#dim(candy_ratings_2015) #  478507      2
-# View(candy_ratings_2015)
-candy_data_2015 <- get_candy_data_2015(raw_2015)
-View(candy_data_2015)
+candy_ratings_2015 <- get_candy_ratings_2015(raw_2015)
+# dim(candy_ratings_2015) 
+#View(candy_ratings_2015)
 
 candy_ratings_2016 <- get_candy_ratings_2016(raw_2016)
-dim(candy_ratings_2016)
+#dim(candy_ratings_2016)
 #View(candy_ratings_2016)
 
 candy_ratings_2017 <- get_candy_ratings_2017(raw_2017)
-dim(candy_ratings_2017)
-#View(df_candy_ratings_2017)
+#dim(candy_ratings_2017)
+#View(candy_ratings_2017)
 
 # Create list of data frames using list()
 list_candy_ratings = list(candy_ratings_2015, 
@@ -172,7 +186,7 @@ list_candy_ratings = list(candy_ratings_2015,
                           candy_ratings_2017)
 
 candy_ratings <- combine_candy_ratings(list_candy_ratings)
-#dim (candy_ratings) # 762355      2
+#dim (candy_ratings) # 
 #View(candy_ratings)
 
 examined <- examine_candy_ratings(candy_ratings)
