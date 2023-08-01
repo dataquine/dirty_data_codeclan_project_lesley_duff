@@ -64,6 +64,10 @@ get_candy_ratings_2015 <- function(raw_data) {
       values_to = "candy_rating",
       values_drop_na = TRUE
     ) %>%
+    mutate(candy_popularity = case_when(
+      candy_rating == "DESPAIR" ~ -1,
+      candy_rating == "JOY" ~ 1
+    ))%>%
     # Check that we don't have NAs in new columns
     verify(!is.na(candy_name)) %>%
     verify(!is.na(candy_rating))
@@ -189,7 +193,7 @@ examine_candy_ratings <- function(candy_ratings) {
 candy_ratings_2015 <- get_candy_ratings_2015(raw_2015)
 # dim(candy_ratings_2015)
 View(candy_ratings_2015)
-print(sum(candy_ratings_2015$popularity))
+print(unique(candy_ratings_2015$candy_rating))
 stop("OK")
 
 candy_ratings_2016 <- get_candy_ratings_2016(raw_2016)
