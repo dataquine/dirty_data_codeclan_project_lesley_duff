@@ -83,6 +83,7 @@ get_candy_ratings_2017 <- function(raw_data) {
   candy_ratings_2017_long <- candy_ratings %>%
     pivot_longer("Q6 | 100 Grand Bar":"Q6 | York Peppermint Patties",
                  names_to = "candy_name",
+                 names_prefix = "Q6 \\| ",
                  values_to = "candy_rating", 
                  values_drop_na = TRUE
     ) %>%
