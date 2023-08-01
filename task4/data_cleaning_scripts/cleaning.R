@@ -40,6 +40,7 @@ get_candy_ratings_2015 <- function(raw_data) {
     # ?pivot_longer
     pivot_longer("[Butterfinger]":"[York Peppermint Patties]",
       names_to = "candy_name",
+      # Remove leading and trailing square brackets
       names_pattern = "^\\[(.*)\\]$",
       values_to = "candy_rating",
       values_drop_na = TRUE
@@ -64,6 +65,8 @@ get_candy_ratings_2016 <- function(raw_data) {
   candy_ratings_2016_long <- candy_ratings %>%
     pivot_longer("[100 Grand Bar]":"[York Peppermint Patties]",
       names_to = "candy_name",
+      # Remove leading and trailing square brackets
+      names_pattern = "^\\[(.*)\\]$",
       values_to = "candy_rating",
       values_drop_na = TRUE
     ) %>%
@@ -95,16 +98,42 @@ get_candy_ratings_2017 <- function(raw_data) {
   return(candy_ratings_2017_long)
 }
 
-df_candy_ratings_2015 <- get_candy_ratings_2015(raw_2015)
-# dim(df_candy_ratings_2015)
- View(df_candy_ratings_2015)
+# We are assuming that all ratings are dataframes of two columns candy_name and
+# candy_rating
+combine_candy_ratings <- function(list_candy_ratings){
+  stopifnot(
+    is.list(list_candy_ratings)
+  )
+  
+  combined_candy_ratings <- bind_rows(list_candy_ratings)
+  return (combined_candy_ratings)
+  #dim(result)
+  #View(result)
+  #str(result)
+  # 762355
+  # 468510, 118290, 175555
+}
 
-#df_candy_ratings_2016 <- get_candy_ratings_2016(raw_2016)
-# dim(df_candy_ratings_2016)
-#View(df_candy_ratings_2016)
+candy_ratings_2015 <- get_candy_ratings_2015(raw_2015)
+dim(candy_ratings_2015)
+# View(candy_ratings_2015)
 
-#df_candy_ratings_2017 <- get_candy_ratings_2017(raw_2017)
+candy_ratings_2016 <- get_candy_ratings_2016(raw_2016)
+dim(candy_ratings_2016)
+#View(candy_ratings_2016)
+
+candy_ratings_2017 <- get_candy_ratings_2017(raw_2017)
+dim(candy_ratings_2017)
 #View(df_candy_ratings_2017)
+
+# Create list of data frames using list()
+list_candy_ratings = list(candy_ratings_2015, 
+                          candy_ratings_2016, 
+                          candy_ratings_2017)
+
+candy_ratings <- combine_candy_ratings(list_candy_ratings)
+dim (candy_ratings) # 762355      2
+
 
 
 
