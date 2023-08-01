@@ -102,7 +102,7 @@ process_decathlon_data <- function(path_dirty_rds_data, path_clean_csv_data) {
 
   # Write out clean data
   # The original .rds format is converted into CSV instead for wider usage.
-  # write_csv(clean_decathlon_data, path_clean_csv_data)
+  write_csv(clean_decathlon_data, path_clean_csv_data)
   return(clean_decathlon_data)
 }
 
