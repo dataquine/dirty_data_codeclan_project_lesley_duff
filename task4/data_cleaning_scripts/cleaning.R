@@ -28,7 +28,8 @@ raw_2017 <- read_excel("raw_data/boing-boing-candy-2017.xlsx")
 # View(raw_2017)
 
 # Get candy ratings from raw data for 2015
-# Produce dataframe of two columns candy_name and candy_rating
+# Produce dataframe of found columns age, trick_or_treating, candy_name and 
+# candy_rating
 get_candy_ratings_2015 <- function(raw_data) {
   # Retrieve candy ratings columns
   candy_ratings <- raw_data %>%
@@ -58,6 +59,15 @@ get_candy_ratings_2015 <- function(raw_data) {
   # View(candy_ratings_2015_long)
 
   return(candy_ratings_2015_long)
+}
+
+get_candy_data_2015 <- function(raw_data) {
+  candy_ratings_2015 <- get_candy_ratings_2015(raw_2015)
+  dim(candy_ratings_2015) #  478507      2
+  
+  candy_data_2015 <- candy_ratings_2015
+  
+  return (candy_data_2015)
 }
 
 # Get candy ratings from raw data for 2016
@@ -142,9 +152,11 @@ examine_candy_ratings <- function(candy_ratings) {
   return(list(popularity_candy_names, alphabetical_candy_names))
 }
 
-candy_ratings_2015 <- get_candy_ratings_2015(raw_2015)
-dim(candy_ratings_2015) #  478507      2
+#candy_ratings_2015 <- get_candy_ratings_2015(raw_2015)
+#dim(candy_ratings_2015) #  478507      2
 # View(candy_ratings_2015)
+candy_data_2015 <- get_candy_data_2015(raw_2015)
+View(candy_data_2015)
 
 candy_ratings_2016 <- get_candy_ratings_2016(raw_2016)
 dim(candy_ratings_2016)
