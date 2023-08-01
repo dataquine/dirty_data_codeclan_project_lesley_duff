@@ -45,7 +45,8 @@ get_candy_ratings_2015 <- function(raw_data) {
     mutate(
       age = as.numeric(age),
       gender = NA,
-      year = 2015
+      year = 2015,
+      country = NA
     )
 
   # Turn wide data into long, Analysis asks Don’t count missing values
@@ -180,7 +181,8 @@ examine_candy_ratings <- function(candy_ratings) {
 
 candy_ratings_2015 <- get_candy_ratings_2015(raw_2015)
 # dim(candy_ratings_2015)
-# View(candy_ratings_2015)
+View(candy_ratings_2015)
+stop("OK")
 
 candy_ratings_2016 <- get_candy_ratings_2016(raw_2016)
 # dim(candy_ratings_2016)
