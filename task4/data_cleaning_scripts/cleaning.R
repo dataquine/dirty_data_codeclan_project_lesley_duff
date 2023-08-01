@@ -121,6 +121,7 @@ get_candy_ratings_2017 <- function(raw_data) {
       age = `Q3: AGE`,
       trick_or_treating = `Q1: GOING OUT?`,
       gender = `Q2: GENDER`,
+      country = `Q4: COUNTRY`,
       "Q6 | 100 Grand Bar":"Q6 | York Peppermint Patties"
     )
 
@@ -129,8 +130,10 @@ get_candy_ratings_2017 <- function(raw_data) {
     mutate(
       age = as.numeric(age),
       year = 2017
-    )
-
+    ) %>% 
+    # Move column to same order as 2015
+    relocate(country, .after = year)
+  
   candy_ratings_2017_long <- candy_ratings %>%
     pivot_longer("Q6 | 100 Grand Bar":"Q6 | York Peppermint Patties",
       names_to = "candy_name",
@@ -185,13 +188,14 @@ examine_candy_ratings <- function(candy_ratings) {
 
 candy_ratings_2015 <- get_candy_ratings_2015(raw_2015)
 # dim(candy_ratings_2015)
-#View(candy_ratings_2015)
+View(candy_ratings_2015)
+print(sum(candy_ratings_2015$popularity))
+stop("OK")
 
 candy_ratings_2016 <- get_candy_ratings_2016(raw_2016)
 # dim(candy_ratings_2016)
-View(candy_ratings_2016)
-print(unique(candy_ratings_2016$country))
-stop("OK")
+#View(candy_ratings_2016)
+
 candy_ratings_2017 <- get_candy_ratings_2017(raw_2017)
 # dim(candy_ratings_2017)
 #View(candy_ratings_2017)
