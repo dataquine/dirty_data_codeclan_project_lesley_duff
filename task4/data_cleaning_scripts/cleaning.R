@@ -161,3 +161,8 @@ examined <- examine_candy_ratings(candy_ratings)
 #examined[[1]]
 #examined[[2]]
 
+# Write out clean data
+# The original .rds format is converted into CSV instead for wider usage.
+
+path_clean_csv_data <- "clean_data/halloween_candy.csv"
+write_csv(candy_ratings, path_clean_csv_data)
