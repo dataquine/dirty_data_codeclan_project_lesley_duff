@@ -108,6 +108,7 @@ get_candy_ratings_2017 <- function(raw_data) {
     select(
       age = `Q3: AGE`,
       trick_or_treating = `Q1: GOING OUT?`,
+      gender = `Q2: GENDER`,
       "Q6 | 100 Grand Bar":"Q6 | York Peppermint Patties")
 
   # Clean up age field - non numeric become NA, field type becomes numeric
@@ -172,8 +173,7 @@ candy_ratings_2015 <- get_candy_ratings_2015(raw_2015)
 
 candy_ratings_2016 <- get_candy_ratings_2016(raw_2016)
 #dim(candy_ratings_2016)
-View(candy_ratings_2016)
-stop("OK")
+#View(candy_ratings_2016)
 
 candy_ratings_2017 <- get_candy_ratings_2017(raw_2017)
 #dim(candy_ratings_2017)
