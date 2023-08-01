@@ -8,6 +8,7 @@
 # boing-boing-candy-2017.xlxs
 #
 
+library(assertr)
 library(readxl)
 library(tidyverse)
 
@@ -32,23 +33,39 @@ get_candy_ratings_2015 <- function(raw_data) {
     
   # Turn wide data into long, Analysis asks Don’t count missing values
   # So will drop NAs
-  candy_ratings_long_no_na <- candy_ratings %>% 
+  candy_ratings_2015_long <- candy_ratings %>% 
     # ?pivot_longer
     pivot_longer("[Butterfinger]":"[York Peppermint Patties]",
                  names_to = "candy_name",
                  values_to = "candy_rating",
-                 values_drop_na = TRUE)
-   
-  #View(candy_ratings_long_na)
+                 values_drop_na = TRUE) %>% 
+    
+    # Check that we don't have NAs in new columns
+    verify(!is.na(candy_name)) %>% 
+    verify(!is.na(candy_rating))
   
-  return(candy_ratings_long_no_na)
+  # View(candy_ratings_2015_long)
+
+  return(candy_ratings_2015_long)
 }
 
 # Get candy ratings from raw data for 2016
+# Produce dataframe of two columns candy_name and candy_rating
 get_candy_ratings_2016 <- function(raw_data) {
   candy_ratings <- raw_data %>% 
     select("[100 Grand Bar]":"[York Peppermint Patties]")
-  return(candy_ratings)
+  
+  # Turn wide data into long, Analysis asks Don’t count missing values
+  # So will drop NAs
+  candy_ratings_2016_long <- candy_ratings %>% 
+    # ?pivot_longer
+    pivot_longer("[100 Grand Bar]":"[York Peppermint Patties]",
+                 names_to = "candy_name",
+                 values_to = "candy_rating") #,
+              #   values_drop_na = TRUE)
+  
+  View(candy_ratings_2016_long)
+  return(candy_ratings_2016_long)
 }
 
 # Get candy ratings from raw data for 2017
@@ -62,14 +79,9 @@ get_candy_ratings_2017 <- function(raw_data) {
 #names_raw_2015
 
 df_candy_ratings_2015 <- get_candy_ratings_2015(raw_2015)
-#df_candy_ratings_2016 <- get_candy_ratings_2016(raw_2016)
-dim(df_candy_ratings_2015)
+#dim(df_candy_ratings_2015)
 View(df_candy_ratings_2015)
 
+#df_candy_ratings_2016 <- get_candy_ratings_2016(raw_2016)
 #dim(df_candy_ratings_2016)
-
-#names_raw_2016 <- names(raw_2016)
-#names_raw_2016
-
-#names_raw_2017 <- names(raw_2017)
-#names_raw_2017 
+#View(df_candy_ratings_2016)
