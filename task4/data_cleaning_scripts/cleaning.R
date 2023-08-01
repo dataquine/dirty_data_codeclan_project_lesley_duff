@@ -24,8 +24,8 @@ View(raw_2016)
 View(raw_2017)
 
 
-names_raw_2017 <- names(raw_2015)
-names_raw_2017
+names_raw_2015 <- names(raw_2015)
+names_raw_2015
 
 names_raw_2016 <- names(raw_2016)
 names_raw_2016
