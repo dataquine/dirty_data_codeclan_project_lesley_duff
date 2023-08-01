@@ -51,11 +51,15 @@ The following column is full of NA values and has the word Ignore in title...
 2. What was the average age of people who are going out trick or treating?
 
 #### 2015 Candy columns:
-[2] "How old are you?"
+
+* [2] "How old are you?" -  character, contains NAs, text
 
 #### 2016 Candy columns:
+
+* [4] "How old are you?"  -  character, contains NAs, text                                                                                                                       
 #### 2017 Candy columns:
 
+  [4] "Q3: AGE"   
 
 
 ### Q3
