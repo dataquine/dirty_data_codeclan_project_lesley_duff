@@ -21,9 +21,6 @@ We have three spreadsheet files in our `raw_data` folder.
 2. boing-boing-candy-2016.xlsx
 3. boing-boing-candy-2015.xlsx
 
-
-documentation_and_analysis
-
 ## Cleaning
 
 ### Candy names
@@ -55,7 +52,13 @@ The data from all three spreadsheets has been combined into one CSV file
 ## Analysis questions
 
 ```{r}
+library(here)
+library(tidyverse)
+```
 
+```{r}
+# read cleaned halloween candy dataset
+halloween_candy <- read_csv(here::here("clean_data/halloween_candy.csv"))
 ```
 
 
