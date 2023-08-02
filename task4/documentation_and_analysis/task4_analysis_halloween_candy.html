@@ -2967,6 +2967,27 @@ full-sized candy bar</strong>.</li>
 <div id="q7-popular-candy-bar-by-year" class="section level3">
 <h3>Q7 Popular candy bar by year</h3>
 <p>What was the most popular candy bar in each year?</p>
+<pre class="r"><code>halloween_candy %&gt;%
+  select(candy_popularity, candy_name, year) %&gt;%
+  group_by(year, candy_name) %&gt;%
+  summarise(total_popularity = sum(candy_popularity, na.rm = TRUE)) %&gt;%
+  slice_max(total_popularity, n = 1) %&gt;%
+  arrange(year)</code></pre>
+<pre><code>## `summarise()` has grouped output by &#39;year&#39;. You can override using the
+## `.groups` argument.</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["year"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["candy_name"],"name":[2],"type":["chr"],"align":["left"]},{"label":["total_popularity"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"2015","2":"Any full-sized candy bar","3":"4603"},{"1":"2016","2":"Any full-sized candy bar","3":"1037"},{"1":"2017","2":"Any full-sized candy bar","3":"1542"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<ul>
+<li>In 2015 the most popular candy bar was
+<code>Any full-sized candy bar</code>.</li>
+<li>In 2016 the most popular candy bar was
+<code>Any full-sized candy bar</code>.</li>
+<li>In 2017 the most popular candy bar was
+<code>Any full-sized candy bar</code>.</li>
+</ul>
 </div>
 <div id="q8-popular-candy-bar-by-country" class="section level3">
 <h3>Q8 Popular candy bar by country</h3>

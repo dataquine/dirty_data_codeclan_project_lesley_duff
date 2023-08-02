@@ -172,7 +172,17 @@ halloween_candy %>%
 What was the most popular candy bar in each year?
 
 ```{r}
+halloween_candy %>%
+  select(candy_popularity, candy_name, year) %>%
+  group_by(year, candy_name) %>%
+  summarise(total_popularity = sum(candy_popularity, na.rm = TRUE)) %>%
+  slice_max(total_popularity, n = 1) %>%
+  arrange(year)
 ```
+
+* In 2015 the most popular candy bar was `Any full-sized candy bar`.
+* In 2016 the most popular candy bar was `Any full-sized candy bar`.
+* In 2017 the most popular candy bar was `Any full-sized candy bar`.
 
 ### Q8 Popular candy bar by country
 
