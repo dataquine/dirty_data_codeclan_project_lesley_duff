@@ -11,7 +11,7 @@
 
 <meta name="author" content="Lesley Duff" />
 
-<meta name="date" content="2023-08-02" />
+<meta name="date" content="2023-08-03" />
 
 <title>Task 4 - Halloween Candy Data</title>
 
@@ -2753,7 +2753,7 @@ border-radius: 0px;
 <h1 class="title toc-ignore">Task 4 - Halloween Candy Data</h1>
 <h3 class="subtitle">Dirty Data Project</h3>
 <h4 class="author">Lesley Duff</h4>
-<h4 class="date">2023-08-02</h4>
+<h4 class="date">2023-08-03</h4>
 
 </div>
 
@@ -2829,6 +2829,14 @@ the main coordinating cleaning script in places where user-supplied
 countries have been provided. Adding search and replace features like
 these leads to a slightly longer amount of time taken for the inital
 clean but makes for a simpler analysis.</p>
+</div>
+<div id="ages" class="section level3">
+<h3>Ages</h3>
+<p>This was a character column and especially in earlier years has a few
+values as jokey replies to the question. It was decided to set non
+numeric values to NA and then these text observations are dropped from
+analysis. N.B. This conversion may generate warning messages “NAs
+introduced by coercion”.</p>
 </div>
 <div id="dataset-for-analysis" class="section level3">
 <h3>Dataset for analysis</h3>
@@ -3025,7 +3033,7 @@ gender question was given.</p>
   group_by(year, candy_name) %&gt;%
   summarise(total_popularity = sum(candy_popularity, na.rm = TRUE)) %&gt;%
   slice_max(total_popularity, n = 1) %&gt;%
-  arrange(year) %&gt;% 
+  arrange(year) %&gt;%
   ungroup()</code></pre>
 <pre><code>## `summarise()` has grouped output by &#39;year&#39;. You can override using the
 ## `.groups` argument.</code></pre>
@@ -3047,41 +3055,41 @@ gender question was given.</p>
 <h3>Q8 Popular candy bar by country</h3>
 <p>What was the most popular candy bar by this rating for people in US,
 Canada, UK, and all other countries?</p>
-<pre class="r"><code>main_countries &lt;- c(&#39;US&#39;, &#39;Canada&#39;, &#39;UK&#39;)
+<pre class="r"><code># List of countries referenced by name in question 8
+main_countries &lt;- c(&quot;US&quot;, &quot;Canada&quot;, &quot;UK&quot;)
 
-
-distinct_countries &lt;- halloween_candy %&gt;%
-  select(country) %&gt;% 
+halloween_candy %&gt;%
+  select(candy_popularity, candy_name, country) %&gt;%
   filter(!is.na(country)) %&gt;%
-  distinct() %&gt;% 
-  arrange(country)
-
-distinct_countries</code></pre>
+  mutate(country = if_else(country %in% main_countries,
+    country, &quot;Other&quot;
+  )) %&gt;%
+  group_by(country, candy_name) %&gt;%
+  summarise(total_popularity = sum(candy_popularity, na.rm = TRUE)) %&gt;%
+  slice_max(total_popularity, n = 1) %&gt;%
+  arrange(desc(total_popularity))</code></pre>
+<pre><code>## `summarise()` has grouped output by &#39;country&#39;. You can override using the
+## `.groups` argument.</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":["country"],"name":[1],"type":["chr"],"align":["left"]}],"data":[{"1":"30.0"},{"1":"44.0"},{"1":"45.0"},{"1":"47.0"},{"1":"51.0"},{"1":"54.0"},{"1":"A"},{"1":"A Tropical Island South Of The Equator"},{"1":"Atlantis"},{"1":"Australia"},{"1":"Austria"},{"1":"Belgium"},{"1":"Brasil"},{"1":"CAN"},{"1":"Canada"},{"1":"Canae"},{"1":"Cascadia"},{"1":"China"},{"1":"Costa Rica"},{"1":"Croatia"},{"1":"Denial"},{"1":"Denmark"},{"1":"EUA"},{"1":"Earth"},{"1":"Endland"},{"1":"España"},{"1":"Europe"},{"1":"Fear And Loathing"},{"1":"Finland"},{"1":"France"},{"1":"Germany"},{"1":"God's Country"},{"1":"Greece"},{"1":"Hungary"},{"1":"I Don't Know Anymore"},{"1":"Iceland"},{"1":"Insanity Lately"},{"1":"Ireland"},{"1":"Japan"},{"1":"Kenya"},{"1":"Korea"},{"1":"Mexico"},{"1":"Narnia"},{"1":"Netherlands"},{"1":"Neverland"},{"1":"New Zealand"},{"1":"One Of The Best Ones"},{"1":"Panama"},{"1":"Philippines"},{"1":"Portugal"},{"1":"See Above"},{"1":"Singapore"},{"1":"Somewhere"},{"1":"South Africa"},{"1":"South Korea"},{"1":"Spain"},{"1":"Subscribe To Dm4uz3 On Youtube"},{"1":"Sweden"},{"1":"Switzerland"},{"1":"Taiwan"},{"1":"The Netherlands"},{"1":"The Republic Of Cascadia"},{"1":"There Isn't One For Old Men"},{"1":"This One"},{"1":"UAE"},{"1":"UK"},{"1":"US"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["country"],"name":[1],"type":["chr"],"align":["left"]},{"label":["candy_name"],"name":[2],"type":["chr"],"align":["left"]},{"label":["total_popularity"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"US","2":"Any full-sized candy bar","3":"2172"},{"1":"Canada","2":"Any full-sized candy bar","3":"252"},{"1":"Other","2":"Any full-sized candy bar","3":"90"},{"1":"UK","2":"Cash, or other forms of legal tender","3":"33"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
-<pre class="r"><code>#halloween_candy %&gt;%
-# # select(candy_popularity, candy_name, country) %&gt;% 
-#  filter(!is.na(country)) %&gt;%
-#group_by(country, candy_name) %&gt;% 
-#summarise(total_popularity = sum(candy_popularity, na.rm = TRUE)) %&gt;% 
-#  slice_max(total_popularity, n = 1)
-
-
-#  group_by(country) %&gt;%
-#  distinct() %&gt;% 
-#  summarise(
-#    total_popularity = sum(candy_popularity, na.rm = TRUE),
-#    country = case_when(
-#      country %in% main_countries ~ country,
-#      .default = &quot;other&quot;
-#    )
-#    ) %&gt;% 
-#  slice_max(total_popularity, n = 1)</code></pre>
+<ul>
+<li>Most popular candy bar by this rating US,
+<code>Any full-sized candy bar</code></li>
+<li>Most popular candy bar by this rating Canada,
+<code>Any full-sized candy bar</code></li>
+<li>Most popular candy bar by this rating UK,
+<code>Cash, or other forms of legal tender</code></li>
+<li>Most popular candy bar by this rating all other countries,
+<code>Any full-sized candy bar</code></li>
+</ul>
 <p>Assumption: 2015 data is excluded from these rseults as country
 wasn’t something asked for then.</p>
+<p>A bit of home interest - UK folk buck the rest of the world in
+choosing money over sweeties…and this was <em>before</em> the cost of
+living crisis.</p>
 </div>
 </div>
 </div>

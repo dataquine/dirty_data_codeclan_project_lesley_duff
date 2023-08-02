@@ -78,6 +78,13 @@ countries have been provided. Adding search and replace features like these
 leads to a slightly longer amount of time taken for the inital clean but makes 
 for a simpler analysis.
 
+### Ages
+
+This was a character column and especially in earlier years has a few values as 
+jokey replies to the question. It was decided to set non numeric values to NA 
+and then these text observations are dropped from analysis.
+N.B. This conversion may generate warning messages "NAs introduced by coercion".
+
 ### Dataset for analysis
 
 A cleaning script has been created. This is used by running script 
@@ -232,7 +239,7 @@ halloween_candy %>%
   group_by(year, candy_name) %>%
   summarise(total_popularity = sum(candy_popularity, na.rm = TRUE)) %>%
   slice_max(total_popularity, n = 1) %>%
-  arrange(year) %>% 
+  arrange(year) %>%
   ungroup()
 ```
 
@@ -245,38 +252,41 @@ halloween_candy %>%
 What was the most popular candy bar by this rating for people in US, Canada, UK,
 and all other countries?
 
-```{r}
-main_countries <- c('US', 'Canada', 'UK')
-
-
+```{r eval=FALSE, include=FALSE}
+# This code was used during development to view country names
+# From the names returned patterns were added to the clean_country function
 distinct_countries <- halloween_candy %>%
-  select(country) %>% 
+  select(country) %>%
   filter(!is.na(country)) %>%
-  distinct() %>% 
+  distinct() %>%
   arrange(country)
 
 distinct_countries
-
-#halloween_candy %>%
-# # select(candy_popularity, candy_name, country) %>% 
-#  filter(!is.na(country)) %>%
-#group_by(country, candy_name) %>% 
-#summarise(total_popularity = sum(candy_popularity, na.rm = TRUE)) %>% 
-#  slice_max(total_popularity, n = 1)
-
-
-#  group_by(country) %>%
-#  distinct() %>% 
-#  summarise(
-#    total_popularity = sum(candy_popularity, na.rm = TRUE),
-#    country = case_when(
-#      country %in% main_countries ~ country,
-#      .default = "other"
-#    )
-#    ) %>% 
-#  slice_max(total_popularity, n = 1)
-
 ```
 
+```{r}
+# List of countries referenced by name in question 8
+main_countries <- c("US", "Canada", "UK")
+
+halloween_candy %>%
+  select(candy_popularity, candy_name, country) %>%
+  filter(!is.na(country)) %>%
+  mutate(country = if_else(country %in% main_countries,
+    country, "Other"
+  )) %>%
+  group_by(country, candy_name) %>%
+  summarise(total_popularity = sum(candy_popularity, na.rm = TRUE)) %>%
+  slice_max(total_popularity, n = 1) %>%
+  arrange(desc(total_popularity))
+```
+
+* Most popular candy bar by this rating US, `Any full-sized candy bar`
+* Most popular candy bar by this rating Canada, `Any full-sized candy bar`
+* Most popular candy bar by this rating UK, `Cash, or other forms of legal tender`
+* Most popular candy bar by this rating all other countries, `Any full-sized candy bar`
+
 Assumption: 2015 data is excluded from these rseults as country wasn't something
-asked for then.
+asked for then. 
+
+A bit of home interest - UK folk buck the rest of the world in choosing money 
+over sweeties...and this was *before* the cost of living crisis.
