@@ -84,8 +84,15 @@ There are **772,352** candy ratings given across the three years.
 What was the average age of people who are going out trick or treating?
 
 ```{r}
-
+halloween_candy %>% 
+  select(age, trick_or_treating) %>%
+  filter(trick_or_treating == "Yes") %>% 
+  group_by(trick_or_treating) %>% 
+  summarise(average_age_trick_or_treating = mean(age, na.rm = TRUE)) %>% 
+  ungroup()
 ```
+
+Average age of people who are going out trick or treating is **35.38839**.
 
 ### Q3 Average age not trick or treating
 

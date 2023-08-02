@@ -2853,6 +2853,19 @@ three years.</p>
 <h3>Q2 Average age trick or treating</h3>
 <p>What was the average age of people who are going out trick or
 treating?</p>
+<pre class="r"><code>halloween_candy %&gt;% 
+  select(age, trick_or_treating) %&gt;%
+  filter(trick_or_treating == &quot;Yes&quot;) %&gt;% 
+  group_by(trick_or_treating) %&gt;% 
+  summarise(average_age_trick_or_treating = mean(age, na.rm = TRUE)) %&gt;% 
+  ungroup()</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["trick_or_treating"],"name":[1],"type":["chr"],"align":["left"]},{"label":["average_age_trick_or_treating"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"Yes","2":"35.38839"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p>Average age of people who are going out trick or treating is
+<strong>35.38839</strong>.</p>
 </div>
 <div id="q3-average-age-not-trick-or-treating" class="section level3">
 <h3>Q3 Average age not trick or treating</h3>
