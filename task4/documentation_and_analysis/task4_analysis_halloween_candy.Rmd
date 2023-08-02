@@ -116,7 +116,6 @@ Assumption: we are only calculating results on those who explicitly answered "No
 For each of joy, despair and meh, which candy bar received the most of these ratings?
 
 ```{r}
-
 halloween_candy %>% 
   select(candy_rating, candy_name) %>% 
   group_by(candy_rating, candy_name) %>% 
