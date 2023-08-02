@@ -2871,6 +2871,21 @@ treating?</p>
 <h3>Q3 Average age not trick or treating</h3>
 <p>What was the average age of people who are not going trick or
 treating?</p>
+<pre class="r"><code>halloween_candy %&gt;% 
+  select(age, trick_or_treating) %&gt;%
+  filter(trick_or_treating == &quot;No&quot;) %&gt;% 
+  group_by(trick_or_treating) %&gt;% 
+  summarise(average_age_not_trick_or_treating = mean(age, na.rm = TRUE)) %&gt;% 
+  ungroup()</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["trick_or_treating"],"name":[1],"type":["chr"],"align":["left"]},{"label":["average_age_not_trick_or_treating"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"No","2":"39.25324"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p>Average age of people not going trick or treating is <strong>39.25324
+</strong>. Assumption: we are only calculating results on those who
+explicitly answered “No” rather than also include those who did not
+answer the question.</p>
 </div>
 <div id="q4-most-ratings-for-joy-despair-and-meh" class="section level3">
 <h3>Q4 Most ratings for joy, despair and meh</h3>

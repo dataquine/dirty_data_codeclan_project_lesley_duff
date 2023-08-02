@@ -99,8 +99,16 @@ Average age of people who are going out trick or treating is **35.38839**.
 What was the average age of people who are not going trick or treating?
 
 ```{r}
-
+halloween_candy %>% 
+  select(age, trick_or_treating) %>%
+  filter(trick_or_treating == "No") %>% 
+  group_by(trick_or_treating) %>% 
+  summarise(average_age_not_trick_or_treating = mean(age, na.rm = TRUE)) %>% 
+  ungroup()
 ```
+
+Average age of people not going trick or treating is **39.25324
+**. Assumption: we are only calculating results on those who explicitly answered "No" rather than also include those who did not answer the question.
 
 ### Q4 Most ratings for joy, despair and meh
 
