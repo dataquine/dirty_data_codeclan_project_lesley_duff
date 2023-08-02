@@ -370,23 +370,26 @@ missing values)</li>
 <div id="candy-columns" class="section level4">
 <h4>2015 Candy columns:</h4>
 <ul>
-<li>[4] “[Butterfinger]” … [96] “[York Peppermint Patties]”</li>
-<li>[114] “[Sea-salt flavored stuff, probably chocolate, since this is
-the &quot;it&quot; flavor of the year]” .. [115] “[Necco Wafers]”</li>
+<li>[4] <code>&quot;[Butterfinger]&quot;</code> … [96]
+<code>&quot;[York Peppermint Patties]&quot;</code></li>
+<li>[114]
+<code>&quot;[Sea-salt flavored stuff, probably chocolate, since this is the \&quot;it\&quot; flavor of the year]&quot;</code>
+.. [115] <code>&quot;[Necco Wafers]&quot;</code></li>
 </ul>
-<p>Questionable non-edilble/candy?</p>
+<p>Questionable non-edilble/candy? Just leave as is. e.g.</p>
 <ul>
-<li>[18] “[Cash, or other forms of legal tender]”</li>
-<li>[23] “[Dental paraphenalia]”</li>
-<li>[26] “[Generic Brand Acetaminophen]”<br />
+<li>[18] <code>&quot;[Cash, or other forms of legal tender]&quot;</code></li>
+<li>[23] <code>&quot;[Dental paraphenalia]&quot;</code></li>
+<li>[26] <code>&quot;[Generic Brand Acetaminophen]&quot;</code><br />
 </li>
-<li>[27] “[Glow sticks]”<br />
+<li>[27] <code>&quot;[Glow sticks]&quot;</code><br />
 </li>
-<li>[28] “[Broken glow stick]”<br />
-TODO … mores∂</li>
+<li>[28] <code>&quot;[Broken glow stick]&quot;</code><br />
+…etc there are plenty more</li>
 </ul>
 <p>These two columns do contain some candy mentions but a lot of
-non-candy items</p>
+non-candy items. Wont’ use yet - some dodgy stuff like sexual
+references.</p>
 <ul>
 <li>[98]
 <code>&quot;Please list any items not included above that give you JOY.&quot;</code></li>
@@ -403,14 +406,11 @@ non-candy items</p>
 <p>The following column is full of NA values and has the word Ignore in
 title… …so we will ignore it. *
 <code>&quot;[York Peppermint Patties] Ignore&quot;</code></p>
-<p>These two columns do contain some candy mentions but a lot of
-non-candy items</p>
-<ul>
-<li>[107]
-<code>&quot;Please list any items not included above that give you JOY.&quot;</code></li>
-<li>[108]
-<code>&quot;Please list any items not included above that give you DESPAIR.&quot;</code></li>
-</ul>
+<p>Similar to 2015 These two columns do contain some candy mentions but
+a lot of non-candy items Wont’ use yet * [107]
+<code>&quot;Please list any items not included above that give you JOY.&quot;</code>
+* [108]
+<code>&quot;Please list any items not included above that give you DESPAIR.&quot;</code></p>
 </div>
 <div id="candy-columns-2" class="section level4">
 <h4>2017 Candy columns:</h4>
@@ -426,6 +426,8 @@ non-candy items</p>
 <li>What was the average age of people who are going out trick or
 treating?</li>
 </ol>
+<p>Need age column as a number for calculation, trick or treating column
+for filtering.</p>
 <div id="candy-columns-3" class="section level4">
 <h4>2015 Candy columns:</h4>
 <ul>
@@ -433,7 +435,7 @@ treating?</li>
 text</li>
 <li>[3]
 <code>&quot;Are you going actually going trick or treating yourself?&quot;</code>
-- Yes/No</li>
+- character, Yes/No</li>
 </ul>
 </div>
 <div id="candy-columns-4" class="section level4">
@@ -444,14 +446,15 @@ text<br />
 </li>
 <li>[2]
 <code>&quot;Are you going actually going trick or treating yourself?&quot;</code>
-- Yes/No</li>
+- character, Yes/No</li>
 </ul>
 </div>
 <div id="candy-columns-5" class="section level4">
 <h4>2017 Candy columns:</h4>
 <ul>
-<li>[4] <code>&quot;Q3: AGE&quot;</code></li>
-<li>[2] <code>&quot;Q1: GOING OUT?&quot;</code></li>
+<li>[4] <code>&quot;Q3: AGE&quot;</code> - character, contains NAs, text</li>
+<li>[2] <code>&quot;Q1: GOING OUT?&quot;</code>- character, contains NAs,
+Yes/No</li>
 </ul>
 </div>
 </div>

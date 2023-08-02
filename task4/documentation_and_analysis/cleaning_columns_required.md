@@ -13,19 +13,20 @@ try and figure out which columns are necessary to answer the analysis questions.
 
 #### 2015 Candy columns:
 
- * [4] "[Butterfinger]" ... [96] "[York Peppermint Patties]"
- * [114] "[Sea-salt flavored stuff, probably chocolate, since this is the \"it\" flavor of the year]" .. [115] "[Necco Wafers]"                                                              
+ * [4] `"[Butterfinger]"` ... [96] `"[York Peppermint Patties]"`
+ * [114] `"[Sea-salt flavored stuff, probably chocolate, since this is the \"it\" flavor of the year]"` .. [115] `"[Necco Wafers]"`                                                              
  
- Questionable non-edilble/candy?
+ Questionable non-edilble/candy? Just leave as is. e.g.
  
- * [18] "[Cash, or other forms of legal tender]"
- * [23] "[Dental paraphenalia]"
-* [26] "[Generic Brand Acetaminophen]"                                            
- * [27] "[Glow sticks]"         
- * [28] "[Broken glow stick]"  
-TODO ... mores∂
+* [18] `"[Cash, or other forms of legal tender]"`
+* [23] `"[Dental paraphenalia]"`
+* [26] `"[Generic Brand Acetaminophen]"`                                          
+* [27] `"[Glow sticks]"`         
+* [28] `"[Broken glow stick]"`  
+...etc there are plenty more
  
- These two columns do contain some candy mentions but a lot of non-candy items
+ These two columns do contain some candy mentions but a lot of non-candy items.
+ Wont' use yet - some dodgy stuff like sexual references.
  
  * [98] `"Please list any items not included above that give you JOY."`
  * [99] `"Please list any items not included above that give you DESPAIR."`
@@ -38,8 +39,9 @@ The following column is full of NA values and has the word Ignore in title...
 ...so we will ignore it.
 * `"[York Peppermint Patties] Ignore"`
 
+Similar to 2015
  These two columns do contain some candy mentions but a lot of non-candy items
- 
+  Wont' use yet
 * [107] `"Please list any items not included above that give you JOY."`
 * [108] `"Please list any items not included above that give you DESPAIR." `
 
@@ -50,20 +52,25 @@ The following column is full of NA values and has the word Ignore in title...
 ### Q2
 2. What was the average age of people who are going out trick or treating?
 
+Need age column as a number for calculation, trick or treating column for 
+filtering.
+
 #### 2015 Candy columns:
 
 * [2] `"How old are you?"` -  character, contains NAs, text
-* [3] `"Are you going actually going trick or treating yourself?"` - Yes/No
+* [3] `"Are you going actually going trick or treating yourself?"`  - character,
+Yes/No
 
 #### 2016 Candy columns:
 
 * [4] `"How old are you?"`  -  character, contains NAs, text  
-* [2] `"Are you going actually going trick or treating yourself?"` - Yes/No
+* [2] `"Are you going actually going trick or treating yourself?"` - character, 
+Yes/No
 
 #### 2017 Candy columns:
 
-*  [4] `"Q3: AGE"`
-*  [2] `"Q1: GOING OUT?"`
+*  [4] `"Q3: AGE"` - character, contains NAs, text
+*  [2] `"Q1: GOING OUT?"`- character, contains NAs, Yes/No
 
 
 ### Q3
