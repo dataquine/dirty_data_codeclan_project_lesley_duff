@@ -2,8 +2,11 @@
 
 Task 4 - Halloween Candy Data
 
-We have three spreadsheet files. for 2015, 2016 qnd 2017. This document is to 
-try and figure out which columns are necessary to answer the analysis questions.
+Back to [main analysis](task4_analysis_halloween_candy.html).
+
+We have three spreadsheet files, one for each year 2015, 2016 and 2017. 
+This document is for the purpose of trying to figure out which columns are 
+necessary to answer the analysis questions.
 
 ## Analysis questions:
 
@@ -37,11 +40,12 @@ try and figure out which columns are necessary to answer the analysis questions.
 
 The following column is full of NA values and has the word Ignore in title...
 ...so we will ignore it.
+
 * `"[York Peppermint Patties] Ignore"`
 
-Similar to 2015
- These two columns do contain some candy mentions but a lot of non-candy items
-  Wont' use yet
+Similar to 2015 These two columns do contain some candy mentions but a lot of 
+non-candy items. Wont' use.
+
 * [107] `"Please list any items not included above that give you JOY."`
 * [108] `"Please list any items not included above that give you DESPAIR." `
 
@@ -109,7 +113,6 @@ Yes/No
 
 ### Q5
 5. How many people rated Starburst as despair?
-For the next three questions, count despair as -1, joy as +1, and meh as 0.
 
 #### 2015 Candy columns:
 
@@ -123,6 +126,7 @@ For the next three questions, count despair as -1, joy as +1, and meh as 0.
 
 * New columns `candy_name`, `candy_rating`
 
+For the next three questions, count despair as -1, joy as +1, and meh as 0.
 
 ### Q6
 6. What was the most popular candy bar by this rating system for each gender in 
@@ -173,3 +177,4 @@ the dataset ?
 
 * New column `country` (From [5] `"Q4: COUNTRY"`), `candy_popularity`
 
+Back to [main analysis](task4_analysis_halloween_candy.html).
