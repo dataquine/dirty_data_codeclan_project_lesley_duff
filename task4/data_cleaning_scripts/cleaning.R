@@ -178,6 +178,55 @@ combine_candy_ratings <- function(list_candy_ratings) {
   # 468510, 118290, 175555
 }
 
+# Make sure variants of US, Canada, UK as standardised
+clean_country <- function(raw_country){
+  country <- raw_country
+  upper_raw_country <- str_to_upper(raw_country)
+  
+  # USA
+  #synonym_usa <- c("USA")
+  print(str_detect(upper_raw_country, "USA"))
+  
+  # Canada
+  
+  # UK
+ 
+  return (country)
+}
+
+# Make sure columns contain expected values
+check_ratings <- function(ratings){
+  
+  ratings <- ratings %>% 
+    #upper_case_country <- str_to_upper(country)
+    # Set age as NA if not reasonable age
+    # Oldest known individual who ever lived
+    # https://en.wikipedia.org/wiki/List_of_the_verified_oldest_people
+    # As of 2023-01-02 we will suggest a maximum of 123
+    # If we have an age is it age >2 <123
+    # We assume entries for young children may have been added by parents
+    mutate(
+      age = if_else(age > 2 & age < 123, age, NA) ,
+      country = case_when(
+        str_detect(str_to_upper(country), "USA")  ~ "US",
+        str_detect(str_to_upper(country), "MERICA")  ~ "US",
+        str_detect(str_to_upper(country), "UNITED STAT")  ~ "US",
+        str_detect(str_to_upper(country), "U.S.")  ~ "US",
+        TRUE          ~ country
+      )
+      ) %>% 
+    assert(in_set("No", "Yes"), trick_or_treating) %>% 
+    assert(in_set("Male", "Female", "Other", "I'd rather not say"), gender) %>% 
+    assert(in_set(2015:2017), year) %>%  
+    assert(in_set("DESPAIR", "JOY", "MEH"), candy_rating) %>%
+    assert(in_set(-1, 0, 1), candy_popularity) #  %>%
+
+  print(sort(unique(ratings$country)))
+    
+  #View(ratings)
+  return (ratings)
+}
+
 # Exploratory examination returning list of dataframes
 # 1 - Candy names by popularity
 # 2 - Candy names by alphabetical name
@@ -222,6 +271,8 @@ list_candy_ratings <- list(
 candy_ratings <- combine_candy_ratings(list_candy_ratings)
 # dim (candy_ratings) #
 # View(candy_ratings)
+
+candy_ratings <- check_ratings(candy_ratings)
 
 examined <- examine_candy_ratings(candy_ratings)
 # examined[[1]]
