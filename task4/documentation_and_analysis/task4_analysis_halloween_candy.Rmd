@@ -1,0 +1,129 @@
+---
+title: "Task 4 - Halloween Candy Data"
+subtitle: Dirty Data Project
+author: "Lesley Duff"
+date: "`r format(Sys.Date())`"
+output:
+  html_document:
+    df_print: paged
+    toc: true
+    toc_float: true
+---
+# Halloween Candy Data
+
+## Introduction
+
+The source of the data is
+
+We have three spreadsheet files in our `raw_data` folder.
+
+1. boing-boing-candy-2015.xlsx
+2. boing-boing-candy-2016.xlsx
+3. boing-boing-candy-2015.xlsx
+
+
+documentation_and_analysis
+
+## Cleaning
+
+### Candy names
+In the original dataset there are a great number of columns for each name of 
+candy. 
+
+The column names from each spreadsheet were obtained and documented in [`halloween_candy_data_files.html`](halloween_candy_data_files.html). This enabled comparison between the structure
+of each sheet. 2015 and 2016 use a similar naming convention with potential 
+candy names inside square brackets `[]`, in 2017 this switches to a 
+prefix of "Q6 | "
+
+It quickly becomes apparent that the candy names apart from brand names contain
+items that are not edible e.g. DVDs. The prompts are often light-hearted and 
+this is clearly supposed to be a fun exercise. For this reason candy it was 
+decided to leave all candy names in the dataset.
+
+1. It's taking a looser definition of candy as being things that are usually
+pleasurable
+2. Brand names appear to originate from the USA and many are unfamiliar in the 
+UK. In the interests of time we are not researching each candy name column to
+see if it is confectionery or not.
+
+### Dataset for analysis
+
+The data from all three spreadsheets has been combined into one CSV file 
+`clean_data/halloween_candy.csv`. This is file is created by running script 
+`data_cleaning_scripts/cleaning.R`, this step only needs to be done once.
+
+## Analysis questions
+
+```{r}
+
+```
+
+
+### Q1 Total candy ratings
+What is the total number of candy ratings given across the three years. (Number of candy ratings, not the number of raters. Don’t count missing values)
+
+```{r}
+
+```
+
+### Q2 Average age trick or treating
+
+What was the average age of people who are going out trick or treating?
+
+```{r}
+
+```
+
+### Q3 Average age not trick or treating
+
+What was the average age of people who are not going trick or treating?
+
+```{r}
+
+```
+
+### Q4 Most ratings for joy, despair and meh
+
+For each of joy, despair and meh, which candy bar received the most of these ratings?
+
+```{r}
+
+```
+
+### Q5 Starburst as despair
+
+How many people rated Starburst as despair?
+
+```{r}
+
+```
+
+***
+For the next three questions, count despair as -1, joy as +1, and meh as 0.
+
+***
+### Q6 Popular candy bar by gender
+
+What was the most popular candy bar by this rating system for each gender in the dataset ?
+
+```{r}
+
+```
+
+### Q7 Popular candy bar by year
+
+What was the most popular candy bar in each year?
+
+```{r}
+
+```
+
+### Q8 Popular candy bar by country
+
+What was the most popular candy bar by this rating for people in US, Canada, UK,
+and all other countries?
+
+```{r}
+
+```
+
