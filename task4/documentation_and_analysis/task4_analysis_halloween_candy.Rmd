@@ -129,7 +129,7 @@ halloween_candy %>%
 * For despair, `Broken glow stick` received most ratings.
 * For meh, `Lollipops` received most ratings.
 
-### Q5 Starburst as despair
+### Q5 Starburst rated as despair
 
 How many people rated Starburst as despair?
 
