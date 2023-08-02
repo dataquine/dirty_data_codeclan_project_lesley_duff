@@ -2819,7 +2819,8 @@ this step only needs to be done once.</p>
 ## ✖ dplyr::filter() masks stats::filter()
 ## ✖ dplyr::lag()    masks stats::lag()
 ## ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
-<pre class="r"><code># read cleaned halloween candy dataset
+<pre class="r"><code># read cleaned Halloween candy dataset
+# This is the combined data for all three years
 halloween_candy &lt;- read_csv(here::here(&quot;clean_data/halloween_candy.csv&quot;))</code></pre>
 <pre><code>## Rows: 772352 Columns: 8
 ## ── Column specification ────────────────────────────────────────────────────────
@@ -2829,11 +2830,24 @@ halloween_candy &lt;- read_csv(here::here(&quot;clean_data/halloween_candy.csv&q
 ## 
 ## ℹ Use `spec()` to retrieve the full column specification for this data.
 ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code># We have the following columns in the clean data
+# age, trick_or_treating, gender, year, country, candy_name, candy_rating, candy_popularity</code></pre>
 <div id="q1-total-candy-ratings" class="section level3">
 <h3>Q1 Total candy ratings</h3>
 <p>What is the total number of candy ratings given across the three
 years. (Number of candy ratings, not the number of raters. Don’t count
 missing values)</p>
+<pre class="r"><code>halloween_candy %&gt;% 
+  select(candy_rating)%&gt;%
+  filter(!is.na(candy_rating)) %&gt;% 
+  summarise(number_candy_ratings = n())</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["number_candy_ratings"],"name":[1],"type":["int"],"align":["right"]}],"data":[{"1":"772352"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p>There are <strong>772,352</strong> candy ratings given across the
+three years.</p>
 </div>
 <div id="q2-average-age-trick-or-treating" class="section level3">
 <h3>Q2 Average age trick or treating</h3>

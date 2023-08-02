@@ -57,8 +57,13 @@ library(tidyverse)
 ```
 
 ```{r}
-# read cleaned halloween candy dataset
+# read cleaned Halloween candy dataset
+# This is the combined data for all three years
 halloween_candy <- read_csv(here::here("clean_data/halloween_candy.csv"))
+
+# We have the following columns in the clean data
+# age, trick_or_treating, gender, year, country, candy_name, candy_rating, candy_popularity
+
 ```
 
 
@@ -66,8 +71,13 @@ halloween_candy <- read_csv(here::here("clean_data/halloween_candy.csv"))
 What is the total number of candy ratings given across the three years. (Number of candy ratings, not the number of raters. Don’t count missing values)
 
 ```{r}
-
+halloween_candy %>% 
+  select(candy_rating)%>%
+  filter(!is.na(candy_rating)) %>% 
+  summarise(number_candy_ratings = n())
 ```
+
+There are **772,352** candy ratings given across the three years.
 
 ### Q2 Average age trick or treating
 
