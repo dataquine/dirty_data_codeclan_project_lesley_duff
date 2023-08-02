@@ -2883,14 +2883,36 @@ treating?</p>
   </script>
 </div>
 <p>Average age of people not going trick or treating is <strong>39.25324
-</strong>. Assumption: we are only calculating results on those who
-explicitly answered “No” rather than also include those who did not
-answer the question.</p>
+</strong>.<br />
+Assumption: we are only calculating results on those who explicitly
+answered “No” rather than also include those who did not answer the
+question.</p>
 </div>
 <div id="q4-most-ratings-for-joy-despair-and-meh" class="section level3">
 <h3>Q4 Most ratings for joy, despair and meh</h3>
 <p>For each of joy, despair and meh, which candy bar received the most
 of these ratings?</p>
+<pre class="r"><code>halloween_candy %&gt;% 
+  select(candy_rating, candy_name) %&gt;% 
+  group_by(candy_rating, candy_name) %&gt;% 
+  summarise(number_of_ratings = n()) %&gt;%
+  slice_max(number_of_ratings) %&gt;% 
+  arrange(desc(number_of_ratings)) %&gt;% 
+  ungroup() </code></pre>
+<pre><code>## `summarise()` has grouped output by &#39;candy_rating&#39;. You can override using the
+## `.groups` argument.</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["candy_rating"],"name":[1],"type":["chr"],"align":["left"]},{"label":["candy_name"],"name":[2],"type":["chr"],"align":["left"]},{"label":["number_of_ratings"],"name":[3],"type":["int"],"align":["right"]}],"data":[{"1":"DESPAIR","2":"Broken glow stick","3":"7905"},{"1":"JOY","2":"Any full-sized candy bar","3":"7589"},{"1":"MEH","2":"Lollipops","3":"1570"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<ul>
+<li>For joy, <code>Any full-sized candy bar</code> received most
+ratings.</li>
+<li>For despair, <code>Broken glow stick</code> received most
+ratings.</li>
+<li>For meh, <code>Lollipops</code> received most ratings.</li>
+</ul>
 </div>
 <div id="q5-starburst-as-despair" class="section level3">
 <h3>Q5 Starburst as despair</h3>

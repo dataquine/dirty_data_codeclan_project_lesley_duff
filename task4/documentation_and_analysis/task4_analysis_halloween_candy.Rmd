@@ -108,7 +108,8 @@ halloween_candy %>%
 ```
 
 Average age of people not going trick or treating is **39.25324
-**. Assumption: we are only calculating results on those who explicitly answered "No" rather than also include those who did not answer the question.
+**.  
+Assumption: we are only calculating results on those who explicitly answered "No" rather than also include those who did not answer the question.
 
 ### Q4 Most ratings for joy, despair and meh
 
@@ -116,7 +117,18 @@ For each of joy, despair and meh, which candy bar received the most of these rat
 
 ```{r}
 
+halloween_candy %>% 
+  select(candy_rating, candy_name) %>% 
+  group_by(candy_rating, candy_name) %>% 
+  summarise(number_of_ratings = n()) %>%
+  slice_max(number_of_ratings) %>% 
+  arrange(desc(number_of_ratings)) %>% 
+  ungroup() 
 ```
+
+* For joy, `Any full-sized candy bar` received most ratings.
+* For despair, `Broken glow stick` received most ratings.
+* For meh, `Lollipops` received most ratings.
 
 ### Q5 Starburst as despair
 
