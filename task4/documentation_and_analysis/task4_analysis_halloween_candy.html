@@ -2762,13 +2762,23 @@ border-radius: 0px;
 <h1>Halloween Candy Data</h1>
 <div id="introduction" class="section level2">
 <h2>Introduction</h2>
-<p>The source of the data is</p>
-<p>We have three spreadsheet files in our <code>raw_data</code>
-folder.</p>
+<p>We have data from a light-hearted online survey conducted by the
+University of British Columbia. The main aim is to gather what users
+feel about different types of candy by giving them ratings. The results
+are analysed and published on the Boing Boing website. You can download
+a poster of a <a href="https://boingboing.net/wp-content/uploads/2017/10/candyhierarchy2017.pdf">visualisation
+of the results from 2017 (PDF)</a></p>
+<p>The source data for a number of years is available for download.</p>
+<p><strong>Source:</strong> <a href="https://www.scq.ubc.ca/so-much-candy-data-seriously/">So Much
+Candy Data, Seriously</a></p>
+<p>We have three spreadsheet files representing survey results from
+2015, 2016 and 2017in our <code>raw_data</code> folder. N.B. These file
+names have been standardised from what you will find on the source
+website.</p>
 <ol style="list-style-type: decimal">
-<li>boing-boing-candy-2015.xlsx</li>
-<li>boing-boing-candy-2016.xlsx</li>
-<li>boing-boing-candy-2015.xlsx</li>
+<li><a href="../raw_data/boing-boing-candy-2015.xlsx">boing-boing-candy-2015.xlsx</a></li>
+<li><a href="../raw_data/boing-boing-candy-2016.xlsx">boing-boing-candy-2016.xlsx</a></li>
+<li><a href="../raw_data/boing-boing-candy-2015.xlsx">boing-boing-candy-2015.xlsx</a></li>
 </ol>
 </div>
 <div id="cleaning" class="section level2">
@@ -2782,30 +2792,58 @@ in <a href="halloween_candy_data_files.html"><code>halloween_candy_data_files.ht
 This enabled comparison between the structure of each sheet. 2015 and
 2016 use a similar naming convention with potential candy names inside
 square brackets <code>[]</code>, in 2017 this switches to a prefix of
-“Q6 |”</p>
+<code>&quot;Q6 | &quot;</code></p>
 <p>It quickly becomes apparent that the candy names apart from brand
 names contain items that are not edible e.g. DVDs. The prompts are often
 light-hearted and this is clearly supposed to be a fun exercise. For
-this reason candy it was decided to leave all candy names in the
+this reason it was decided to leave all original candy names in the
 dataset.</p>
 <ol style="list-style-type: decimal">
-<li>It’s taking a looser definition of candy as being things that are
-usually pleasurable</li>
-<li>Brand names appear to originate from the USA and many are unfamiliar
-in the UK. In the interests of time we are not researching each candy
-name column to see if it is confectionery or not.</li>
+<li>It’s taking a broader definition of ‘candy’ as being things that are
+usually pleasurable not just confectionery</li>
+<li>Brand names appear to originate from North America and many are
+unfamiliar in the UK. In the interests of time we are not researching
+each candy name column to see if it is confectionery or not.</li>
 </ol>
+<p>In a similar vein there are a couple of columns left as free text
+entry for the survey users e.g. “Please list any items not included
+above that give you JOY” and for despair. These are a potential source
+of extra ratings. These also contain sex and drugs references - such
+columns have been omitted from this analysis.</p>
+</div>
+<div id="country-names" class="section level3">
+<h3>Country names</h3>
+<p>Question 8 requires country names and asks specifically for US,
+Canada, UK by name. Countries were not asked for in the 2015 survey so
+for that year in the new dataset have been set to NA. For 2016/2017
+there are a number of issues Particularly for US many references are
+jokey as if being chanted. Or slang versions like <code>murica</code>
+Some users have entered the name of US states instead of their country.
+For Canada there are some punctuation typos For UK there are
+misspellings of United Kingdom and individual countries such as Scotland
+and England.</p>
+<p>To try to address some of the common variations found a helper
+function <code>clean_country()</code> has been added
+<code>data_cleaning_scripts/clean_country.R</code>. This is called from
+the main coordinating cleaning script in places where user-supplied
+countries have been provided. Adding search and replace features like
+these leads to a slightly longer amount of time taken for the inital
+clean but makes for a simpler analysis.</p>
 </div>
 <div id="dataset-for-analysis" class="section level3">
 <h3>Dataset for analysis</h3>
-<p>The data from all three spreadsheets has been combined into one CSV
-file <code>clean_data/halloween_candy.csv</code>. This is file is
-created by running script <code>data_cleaning_scripts/cleaning.R</code>,
-this step only needs to be done once.</p>
+<p>A cleaning script has been created. This is used by running script
+<code>data_cleaning_scripts/cleaning.R</code> After the script completes
+the data from all three spreadsheets is been combined into one large CSV
+file <code>clean_data/halloween_candy.csv</code>. This step only needs
+to be done once as the analysis will use the cleaned data.</p>
 </div>
-</div>
-<div id="analysis-questions" class="section level2">
-<h2>Analysis questions</h2>
+<div id="analysis-preparation" class="section level3">
+<h3>Analysis preparation</h3>
+<p>The eight questions to be answered were examined to suggest which
+columns from the original spreadsheet would be required as a minimum to
+enable results to be generated. This analysis preparation documentation
+can be found at <a href="cleaning_columns_required.html">cleaning_columns_required.html</a>.</p>
 <pre class="r"><code>library(here)</code></pre>
 <pre><code>## here() starts at /Users/dataquine/Library/CloudStorage/OneDrive-Personal/Codeclan/GitHub/CodeClan/dirty_data_codeclan_project_lesley_duff/task4</code></pre>
 <pre class="r"><code>library(tidyverse)</code></pre>
@@ -2830,8 +2868,21 @@ halloween_candy &lt;- read_csv(here::here(&quot;clean_data/halloween_candy.csv&q
 ## 
 ## ℹ Use `spec()` to retrieve the full column specification for this data.
 ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-<pre class="r"><code># We have the following columns in the clean data
-# age, trick_or_treating, gender, year, country, candy_name, candy_rating, candy_popularity</code></pre>
+<p>We have the following columns in the clean data</p>
+<ul>
+<li><code>age</code></li>
+<li><code>trick_or_treating</code></li>
+<li><code>gender</code></li>
+<li><code>year</code></li>
+<li><code>country</code></li>
+<li><code>candy_name</code></li>
+<li><code>candy_rating</code></li>
+<li><code>candy_popularity</code></li>
+</ul>
+</div>
+</div>
+<div id="analysis-questions" class="section level2">
+<h2>Analysis questions</h2>
 <div id="q1-total-candy-ratings" class="section level3">
 <h3>Q1 Total candy ratings</h3>
 <p>What is the total number of candy ratings given across the three
@@ -2963,6 +3014,8 @@ full-sized candy bar</strong>.</li>
 <li>Most popular candy bar for <code>Other</code> was <strong>Any
 full-sized candy bar</strong>.</li>
 </ul>
+<p>Assumption: we are not including ratings where no response to the
+gender question was given.</p>
 </div>
 <div id="q7-popular-candy-bar-by-year" class="section level3">
 <h3>Q7 Popular candy bar by year</h3>
@@ -2972,7 +3025,8 @@ full-sized candy bar</strong>.</li>
   group_by(year, candy_name) %&gt;%
   summarise(total_popularity = sum(candy_popularity, na.rm = TRUE)) %&gt;%
   slice_max(total_popularity, n = 1) %&gt;%
-  arrange(year)</code></pre>
+  arrange(year) %&gt;% 
+  ungroup()</code></pre>
 <pre><code>## `summarise()` has grouped output by &#39;year&#39;. You can override using the
 ## `.groups` argument.</code></pre>
 <div data-pagedtable="false">
@@ -2993,6 +3047,41 @@ full-sized candy bar</strong>.</li>
 <h3>Q8 Popular candy bar by country</h3>
 <p>What was the most popular candy bar by this rating for people in US,
 Canada, UK, and all other countries?</p>
+<pre class="r"><code>main_countries &lt;- c(&#39;US&#39;, &#39;Canada&#39;, &#39;UK&#39;)
+
+
+distinct_countries &lt;- halloween_candy %&gt;%
+  select(country) %&gt;% 
+  filter(!is.na(country)) %&gt;%
+  distinct() %&gt;% 
+  arrange(country)
+
+distinct_countries</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["country"],"name":[1],"type":["chr"],"align":["left"]}],"data":[{"1":"30.0"},{"1":"44.0"},{"1":"45.0"},{"1":"47.0"},{"1":"51.0"},{"1":"54.0"},{"1":"A"},{"1":"A Tropical Island South Of The Equator"},{"1":"Atlantis"},{"1":"Australia"},{"1":"Austria"},{"1":"Belgium"},{"1":"Brasil"},{"1":"CAN"},{"1":"Canada"},{"1":"Canae"},{"1":"Cascadia"},{"1":"China"},{"1":"Costa Rica"},{"1":"Croatia"},{"1":"Denial"},{"1":"Denmark"},{"1":"EUA"},{"1":"Earth"},{"1":"Endland"},{"1":"España"},{"1":"Europe"},{"1":"Fear And Loathing"},{"1":"Finland"},{"1":"France"},{"1":"Germany"},{"1":"God's Country"},{"1":"Greece"},{"1":"Hungary"},{"1":"I Don't Know Anymore"},{"1":"Iceland"},{"1":"Insanity Lately"},{"1":"Ireland"},{"1":"Japan"},{"1":"Kenya"},{"1":"Korea"},{"1":"Mexico"},{"1":"Narnia"},{"1":"Netherlands"},{"1":"Neverland"},{"1":"New Zealand"},{"1":"One Of The Best Ones"},{"1":"Panama"},{"1":"Philippines"},{"1":"Portugal"},{"1":"See Above"},{"1":"Singapore"},{"1":"Somewhere"},{"1":"South Africa"},{"1":"South Korea"},{"1":"Spain"},{"1":"Subscribe To Dm4uz3 On Youtube"},{"1":"Sweden"},{"1":"Switzerland"},{"1":"Taiwan"},{"1":"The Netherlands"},{"1":"The Republic Of Cascadia"},{"1":"There Isn't One For Old Men"},{"1":"This One"},{"1":"UAE"},{"1":"UK"},{"1":"US"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<pre class="r"><code>#halloween_candy %&gt;%
+# # select(candy_popularity, candy_name, country) %&gt;% 
+#  filter(!is.na(country)) %&gt;%
+#group_by(country, candy_name) %&gt;% 
+#summarise(total_popularity = sum(candy_popularity, na.rm = TRUE)) %&gt;% 
+#  slice_max(total_popularity, n = 1)
+
+
+#  group_by(country) %&gt;%
+#  distinct() %&gt;% 
+#  summarise(
+#    total_popularity = sum(candy_popularity, na.rm = TRUE),
+#    country = case_when(
+#      country %in% main_countries ~ country,
+#      .default = &quot;other&quot;
+#    )
+#    ) %&gt;% 
+#  slice_max(total_popularity, n = 1)</code></pre>
+<p>Assumption: 2015 data is excluded from these rseults as country
+wasn’t something asked for then.</p>
 </div>
 </div>
 </div>
