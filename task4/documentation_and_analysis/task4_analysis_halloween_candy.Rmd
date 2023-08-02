@@ -134,8 +134,15 @@ halloween_candy %>%
 How many people rated Starburst as despair?
 
 ```{r}
-
+halloween_candy %>% 
+  select(candy_name, candy_rating) %>% 
+  filter(candy_name == "Starburst" & candy_rating == "DESPAIR") %>%
+  group_by(candy_rating) %>% 
+  summarise(number_ratings_starburst_despair = n()) %>% 
+  ungroup()
 ```
+
+**1990** people rated Starburst as despair?
 
 ***
 For the next three questions, count despair as -1, joy as +1, and meh as 0.

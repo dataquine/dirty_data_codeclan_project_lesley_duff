@@ -2917,6 +2917,18 @@ ratings.</li>
 <div id="q5-starburst-as-despair" class="section level3">
 <h3>Q5 Starburst as despair</h3>
 <p>How many people rated Starburst as despair?</p>
+<pre class="r"><code>halloween_candy %&gt;% 
+  select(candy_name, candy_rating) %&gt;% 
+  filter(candy_name == &quot;Starburst&quot; &amp; candy_rating == &quot;DESPAIR&quot;) %&gt;%
+  group_by(candy_rating) %&gt;% 
+  summarise(number_ratings_starburst_despair = n()) %&gt;% 
+  ungroup()</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["candy_rating"],"name":[1],"type":["chr"],"align":["left"]},{"label":["number_ratings_starburst_despair"],"name":[2],"type":["int"],"align":["right"]}],"data":[{"1":"DESPAIR","2":"1990"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p><strong>1990</strong> people rated Starburst as despair?</p>
 <hr />
 <p>For the next three questions, count despair as -1, joy as +1, and meh
 as 0.</p>
