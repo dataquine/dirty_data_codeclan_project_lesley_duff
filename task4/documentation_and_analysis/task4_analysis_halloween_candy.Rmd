@@ -63,7 +63,6 @@ halloween_candy <- read_csv(here::here("clean_data/halloween_candy.csv"))
 
 # We have the following columns in the clean data
 # age, trick_or_treating, gender, year, country, candy_name, candy_rating, candy_popularity
-
 ```
 
 
@@ -71,9 +70,9 @@ halloween_candy <- read_csv(here::here("clean_data/halloween_candy.csv"))
 What is the total number of candy ratings given across the three years. (Number of candy ratings, not the number of raters. Don’t count missing values)
 
 ```{r}
-halloween_candy %>% 
-  select(candy_rating)%>%
-  filter(!is.na(candy_rating)) %>% 
+halloween_candy %>%
+  select(candy_rating) %>%
+  filter(!is.na(candy_rating)) %>%
   summarise(number_candy_ratings = n())
 ```
 
@@ -84,11 +83,11 @@ There are **772,352** candy ratings given across the three years.
 What was the average age of people who are going out trick or treating?
 
 ```{r}
-halloween_candy %>% 
+halloween_candy %>%
   select(age, trick_or_treating) %>%
-  filter(trick_or_treating == "Yes") %>% 
-  group_by(trick_or_treating) %>% 
-  summarise(average_age_trick_or_treating = mean(age, na.rm = TRUE)) %>% 
+  filter(trick_or_treating == "Yes") %>%
+  group_by(trick_or_treating) %>%
+  summarise(average_age_trick_or_treating = mean(age, na.rm = TRUE)) %>%
   ungroup()
 ```
 
@@ -99,11 +98,11 @@ Average age of people who are going out trick or treating is **35.38839**.
 What was the average age of people who are not going trick or treating?
 
 ```{r}
-halloween_candy %>% 
+halloween_candy %>%
   select(age, trick_or_treating) %>%
-  filter(trick_or_treating == "No") %>% 
-  group_by(trick_or_treating) %>% 
-  summarise(average_age_not_trick_or_treating = mean(age, na.rm = TRUE)) %>% 
+  filter(trick_or_treating == "No") %>%
+  group_by(trick_or_treating) %>%
+  summarise(average_age_not_trick_or_treating = mean(age, na.rm = TRUE)) %>%
   ungroup()
 ```
 
@@ -116,13 +115,13 @@ Assumption: we are only calculating results on those who explicitly answered "No
 For each of joy, despair and meh, which candy bar received the most of these ratings?
 
 ```{r}
-halloween_candy %>% 
-  select(candy_rating, candy_name) %>% 
-  group_by(candy_rating, candy_name) %>% 
+halloween_candy %>%
+  select(candy_rating, candy_name) %>%
+  group_by(candy_rating, candy_name) %>%
   summarise(number_of_ratings = n()) %>%
-  slice_max(number_of_ratings) %>% 
-  arrange(desc(number_of_ratings)) %>% 
-  ungroup() 
+  slice_max(number_of_ratings, n = 1) %>%
+  arrange(desc(number_of_ratings)) %>%
+  ungroup()
 ```
 
 * For joy, `Any full-sized candy bar` received most ratings.
@@ -134,11 +133,11 @@ halloween_candy %>%
 How many people rated Starburst as despair?
 
 ```{r}
-halloween_candy %>% 
-  select(candy_name, candy_rating) %>% 
+halloween_candy %>%
+  select(candy_name, candy_rating) %>%
   filter(candy_name == "Starburst" & candy_rating == "DESPAIR") %>%
-  group_by(candy_rating) %>% 
-  summarise(number_ratings_starburst_despair = n()) %>% 
+  group_by(candy_rating) %>%
+  summarise(number_ratings_starburst_despair = n()) %>%
   ungroup()
 ```
 
@@ -153,15 +152,26 @@ For the next three questions, count despair as -1, joy as +1, and meh as 0.
 What was the most popular candy bar by this rating system for each gender in the dataset ?
 
 ```{r}
-
+halloween_candy %>%
+  select(candy_popularity, candy_name, gender) %>%
+  filter(!is.na(gender)) %>%
+  group_by(gender, candy_name) %>%
+  summarise(total_popularity = sum(candy_popularity, na.rm = TRUE)) %>%
+  slice_max(total_popularity, n = 1) %>%
+  arrange(desc(total_popularity)) %>%
+  ungroup()
 ```
+
+* Most popular candy bar for `Male` was **Any full-sized candy bar**.
+* Most popular candy bar for `Female` was **Any full-sized candy bar**.
+* Most popular candy bar for `I'd rather not say` was **Any full-sized candy bar**.
+* Most popular candy bar for `Other` was **Any full-sized candy bar**.
 
 ### Q7 Popular candy bar by year
 
 What was the most popular candy bar in each year?
 
 ```{r}
-
 ```
 
 ### Q8 Popular candy bar by country
@@ -170,6 +180,4 @@ What was the most popular candy bar by this rating for people in US, Canada, UK,
 and all other countries?
 
 ```{r}
-
 ```
-
