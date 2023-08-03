@@ -120,7 +120,7 @@ To try to address some of the common variations found a helper function
 `clean_country()` has been added `data_cleaning_scripts/clean_country.R`. This is
 called from the main coordinating cleaning script in places where user-supplied 
 countries have been provided. Adding search and replace features like these 
-leads to a slightly longer amount of time taken for the inital clean but makes 
+leads to a slightly longer amount of time taken for the initial clean but makes 
 for a simpler analysis.
 
 ### Ages
