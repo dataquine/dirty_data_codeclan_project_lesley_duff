@@ -118,7 +118,7 @@ The average 100m time in **Olympic Games** was **10.91571s**.
 decathlon_data %>%
   select(athlete, points, competition) %>%
   # lots of duplicates, get rid of them
-  unique() %>%
+  distinct() %>% 
   group_by(athlete) %>%
   summarise(highest_total_points = sum(points, na.rm = TRUE)) %>%
   slice_max(highest_total_points, n = 1) %>% 
@@ -181,7 +181,7 @@ average points for competitors who ran 400m in more than 50 seconds **7727.167**
 decathlon_data %>%
   select(athlete, competition) %>%
   # remove duplicates
-  unique() %>%
+  distinct() %>%
   group_by(competition) %>%
   summarise(num_athletes = n()) %>% 
   ungroup()
@@ -194,7 +194,7 @@ decathlon_data %>%
 ```{r}
 decathlon_data %>%
   select(athlete, competition) %>%
-  unique() %>%
+  distinct() %>%
   group_by(athlete) %>%
   summarise(number_competitions = n()) %>%
   filter(number_competitions == 2) %>%

@@ -2904,7 +2904,7 @@ total points across both competitions?</h3>
 <pre class="r"><code>decathlon_data %&gt;%
   select(athlete, points, competition) %&gt;%
   # lots of duplicates, get rid of them
-  unique() %&gt;%
+  distinct() %&gt;% 
   group_by(athlete) %&gt;%
   summarise(highest_total_points = sum(points, na.rm = TRUE)) %&gt;%
   slice_max(highest_total_points, n = 1) %&gt;% 
@@ -2989,7 +2989,7 @@ took part in each competition?</h3>
 <pre class="r"><code>decathlon_data %&gt;%
   select(athlete, competition) %&gt;%
   # remove duplicates
-  unique() %&gt;%
+  distinct() %&gt;%
   group_by(competition) %&gt;%
   summarise(num_athletes = n()) %&gt;% 
   ungroup()</code></pre>
@@ -3008,7 +3008,7 @@ Games</strong>.</p>
 part in both competitions?</h3>
 <pre class="r"><code>decathlon_data %&gt;%
   select(athlete, competition) %&gt;%
-  unique() %&gt;%
+  distinct() %&gt;%
   group_by(athlete) %&gt;%
   summarise(number_competitions = n()) %&gt;%
   filter(number_competitions == 2) %&gt;%
