@@ -9,73 +9,16 @@
 #
 
 library(assertr)
-library(janitor)
 library(readxl)
 library(tidyverse)
 
-raw_2015 <- read_excel("raw_data/boing-boing-candy-2015.xlsx")
-raw_2016 <- read_excel("raw_data/boing-boing-candy-2016.xlsx")
-raw_2017 <- read_excel("raw_data/boing-boing-candy-2017.xlsx")
-
-# View(raw_2015)
-# View(raw_2016)
-# View(raw_2017)
-
-# Helper function for standardising messy country names
-source("data_cleaning_scripts/clean_country.R")
-
-# Code specific to the structure of individual years
+# Year specific helper functions ----
+# Code specific to wrangling individual years
 source("data_cleaning_scripts/get_candy_ratings_2015.R")
 source("data_cleaning_scripts/get_candy_ratings_2016.R")
+source("data_cleaning_scripts/get_candy_ratings_2017.R")
 
-
-
-
-# Get candy ratings from raw data for 2017
-# Produce dataframe of columns age, trick_or_treating, gender, year, country
-# candy_name, candy_rating and candy_popularity
-get_candy_ratings_2017 <- function(raw_data) {
-  #  view(raw_data)
-  candy_ratings <- raw_data %>%
-    select(
-      age = `Q3: AGE`,
-      trick_or_treating = `Q1: GOING OUT?`,
-      gender = `Q2: GENDER`,
-      country = `Q4: COUNTRY`,
-      "Q6 | 100 Grand Bar":"Q6 | York Peppermint Patties"
-    )
-
-  # Clean up age field - non numeric become NA, field type becomes numeric
-  candy_ratings <- candy_ratings %>%
-    mutate(
-      age = as.numeric(age),
-      year = 2017
-    ) %>%
-    # Move column to same order as 2015
-    relocate(country, .after = year)
-
-  # Do search and replace on country column
-  candy_ratings <- clean_country(candy_ratings)
-
-  candy_ratings_2017_long <- candy_ratings %>%
-    pivot_longer("Q6 | 100 Grand Bar":"Q6 | York Peppermint Patties",
-      names_to = "candy_name",
-      names_prefix = "Q6 \\| ",
-      values_to = "candy_rating",
-      values_drop_na = TRUE
-    ) %>%
-    mutate(candy_popularity = case_when(
-      candy_rating == "DESPAIR" ~ -1,
-      candy_rating == "JOY" ~ 1,
-      candy_rating == "MEH" ~ 0
-    )) %>%
-    # Check that we don't have NAs in pivoted columns
-    verify(!is.na(candy_name)) %>%
-    verify(!is.na(candy_rating))
-
-  return(candy_ratings_2017_long)
-}
-
+# Combining and examining data structure functions ----
 # Join all our spreadsheet dataframes together into a single large dataframe
 # We are assuming that all ratings are dataframes with the same columns
 combine_candy_ratings <- function(list_candy_ratings) {
@@ -134,29 +77,46 @@ examine_candy_ratings <- function(candy_ratings) {
   return(list(popularity_candy_names, alphabetical_candy_names))
 }
 
+# Process each year of data ----
+
+# Process 2015 ----
+raw_2015 <- read_excel("raw_data/boing-boing-candy-2015.xlsx")
+
 candy_ratings_2015 <- get_candy_ratings_2015(raw_2015)
 # dim(candy_ratings_2015)
 # View(candy_ratings_2015)
+rm(raw_2015)
+
+# Process 2016 ----
+raw_2016 <- read_excel("raw_data/boing-boing-candy-2016.xlsx")
 
 candy_ratings_2016 <- get_candy_ratings_2016(raw_2016)
 # dim(candy_ratings_2016)
 # View(candy_ratings_2016)
+rm(raw_2016)
+
+# Process 2017 ----
+raw_2017 <- read_excel("raw_data/boing-boing-candy-2017.xlsx")
 
 candy_ratings_2017 <- get_candy_ratings_2017(raw_2017)
 # dim(candy_ratings_2017)
 # View(candy_ratings_2017)
+rm(raw_2017)
 
-# Create list of data frames using list()
+# Generate combined data structure ----
+# Create list of data frames for every year in the analysis
 list_candy_ratings <- list(
   candy_ratings_2015,
   candy_ratings_2016,
   candy_ratings_2017
 )
 
+rm(candy_ratings_2015, candy_ratings_2016, candy_ratings_2017)
 candy_ratings <- combine_candy_ratings(list_candy_ratings)
 # dim (candy_ratings) #
 # View(candy_ratings)
 
+rm(list_candy_ratings)
 candy_ratings <- check_ratings(candy_ratings)
 
 # examined <- examine_candy_ratings(candy_ratings)
@@ -169,3 +129,4 @@ candy_ratings <- check_ratings(candy_ratings)
 # spreadsheet versions but makes the analysis phases more straightforward.
 path_clean_csv_data <- "clean_data/halloween_candy.csv"
 write_csv(candy_ratings, path_clean_csv_data)
+rm(candy_ratings)
