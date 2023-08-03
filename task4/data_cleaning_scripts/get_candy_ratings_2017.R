@@ -1,9 +1,23 @@
+# Author: Lesley Duff
+# Filename: get_candy_ratings_2017.R
+# Title: Process 2017 data structure
+# Date Created: 2023-08-03
+# Description:
+#   From a data frame for 2017 restructure in to common structure used for
+# combining with other years. Produce data frame of columns:
+# age,
+# trick_or_treating,
+# gender,
+# year,
+# country,
+# candy_name,
+# candy_rating
+# candy_popularity
+
 # Helper function for standardising messy country names
 source("data_cleaning_scripts/clean_country.R")
 
 # Get candy ratings from raw data for 2017
-# Produce dataframe of columns age, trick_or_treating, gender, year, country
-# candy_name, candy_rating and candy_popularity
 get_candy_ratings_2017 <- function(raw_data) {
   #  view(raw_data)
   candy_ratings <- raw_data %>%
@@ -14,7 +28,7 @@ get_candy_ratings_2017 <- function(raw_data) {
       country = `Q4: COUNTRY`,
       "Q6 | 100 Grand Bar":"Q6 | York Peppermint Patties"
     )
-  
+
   # Clean up age field - non numeric become NA, field type becomes numeric
   candy_ratings <- candy_ratings %>%
     mutate(
@@ -23,16 +37,16 @@ get_candy_ratings_2017 <- function(raw_data) {
     ) %>%
     # Move column to same order as 2015
     relocate(country, .after = year)
-  
+
   # Do search and replace on country column
   candy_ratings <- clean_country(candy_ratings)
-  
+
   candy_ratings_2017_long <- candy_ratings %>%
     pivot_longer("Q6 | 100 Grand Bar":"Q6 | York Peppermint Patties",
-                 names_to = "candy_name",
-                 names_prefix = "Q6 \\| ",
-                 values_to = "candy_rating",
-                 values_drop_na = TRUE
+      names_to = "candy_name",
+      names_prefix = "Q6 \\| ",
+      values_to = "candy_rating",
+      values_drop_na = TRUE
     ) %>%
     mutate(candy_popularity = case_when(
       candy_rating == "DESPAIR" ~ -1,
@@ -42,6 +56,6 @@ get_candy_ratings_2017 <- function(raw_data) {
     # Check that we don't have NAs in pivoted columns
     verify(!is.na(candy_name)) %>%
     verify(!is.na(candy_rating))
-  
+
   return(candy_ratings_2017_long)
 }
