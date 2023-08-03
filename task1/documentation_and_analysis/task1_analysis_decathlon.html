@@ -2824,12 +2824,18 @@ Games).</li>
 <li>The column titles were renamed to remove full stops and start
 columns with numbers with an ‘x’ using
 <code>janitor::clean_names()</code></li>
-<li>Columns <code>javeline</code> and <code>x110m_hurdle</code> were
-renamed to <code>javelin</code> and <code>x110m_hurdles</code> to
+<li>Column <code>javeline</code> was renamed to <code>javelin</code> to
 improve the match to the English descriptions of the names of the
 events.</li>
 <li>The original data had row names with the names of the athletes.
 These were moved to be a new column <code>athlete</code>.</li>
+<li>Originally code was developed using one column per event. This did
+work and the analysis code was relatively simple but the brief asked
+pointed out that the data wasn’t ‘tidy’ so this was reworked to turn the
+events data into long data creating two new two columns
+<code>decathlon_event</code> and <code>result</code>. This improved the
+clean data but did make the analysis code involve slightly more
+code.</li>
 </ul>
 </div>
 <div id="analysis-questions" class="section level2" number="1.4">
@@ -2880,7 +2886,8 @@ average 100m time in each competition?</h3>
   select(decathlon_event, competition, result) %&gt;%
   filter(decathlon_event == &quot;100m&quot;) %&gt;%
   group_by(competition) %&gt;%
-  summarise(average_100m_time = mean(result, na.rm = TRUE))</code></pre>
+  summarise(average_100m_time = mean(result, na.rm = TRUE)) %&gt;% 
+  ungroup()</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["competition"],"name":[1],"type":["chr"],"align":["left"]},{"label":["average_100m_time"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"Decastar","2":"11.17538"},{"1":"OlympicG","2":"10.91571"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
@@ -2900,7 +2907,8 @@ total points across both competitions?</h3>
   unique() %&gt;%
   group_by(athlete) %&gt;%
   summarise(highest_total_points = sum(points, na.rm = TRUE)) %&gt;%
-  slice_max(highest_total_points, n = 1)</code></pre>
+  slice_max(highest_total_points, n = 1) %&gt;% 
+  ungroup()</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["athlete"],"name":[1],"type":["chr"],"align":["left"]},{"label":["highest_total_points"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"Sebrle","2":"17110"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
@@ -2919,7 +2927,8 @@ shot-put scores for the top three competitors in each competition?</h3>
   select(decathlon_event, score = result, athlete, competition, rank, points) %&gt;%
   filter(decathlon_event == &quot;shot put&quot;) %&gt;%
   group_by(competition) %&gt;%
-  slice_max(points, n = 3)</code></pre>
+  slice_max(points, n = 3) %&gt;% 
+  ungroup()</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["decathlon_event"],"name":[1],"type":["chr"],"align":["left"]},{"label":["score"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["athlete"],"name":[3],"type":["chr"],"align":["left"]},{"label":["competition"],"name":[4],"type":["chr"],"align":["left"]},{"label":["rank"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["points"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"shot put","2":"14.83","3":"Sebrle","4":"Decastar","5":"1","6":"8217"},{"1":"shot put","2":"14.26","3":"Clay","4":"Decastar","5":"2","6":"8122"},{"1":"shot put","2":"14.77","3":"Karpov","4":"Decastar","5":"3","6":"8099"},{"1":"shot put","2":"16.36","3":"Sebrle","4":"OlympicG","5":"1","6":"8893"},{"1":"shot put","2":"15.23","3":"Clay","4":"OlympicG","5":"2","6":"8820"},{"1":"shot put","2":"15.93","3":"Karpov","4":"OlympicG","5":"3","6":"8725"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
@@ -2982,7 +2991,8 @@ took part in each competition?</h3>
   # remove duplicates
   unique() %&gt;%
   group_by(competition) %&gt;%
-  summarise(num_athletes = n())</code></pre>
+  summarise(num_athletes = n()) %&gt;% 
+  ungroup()</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["competition"],"name":[1],"type":["chr"],"align":["left"]},{"label":["num_athletes"],"name":[2],"type":["int"],"align":["right"]}],"data":[{"1":"Decastar","2":"13"},{"1":"OlympicG","2":"28"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
@@ -3002,7 +3012,8 @@ part in both competitions?</h3>
   group_by(athlete) %&gt;%
   summarise(number_competitions = n()) %&gt;%
   filter(number_competitions == 2) %&gt;%
-  arrange(athlete)</code></pre>
+  arrange(athlete) %&gt;% 
+  ungroup()</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["athlete"],"name":[1],"type":["chr"],"align":["left"]},{"label":["number_competitions"],"name":[2],"type":["int"],"align":["right"]}],"data":[{"1":"Barras","2":"2"},{"1":"Bernard","2":"2"},{"1":"Clay","2":"2"},{"1":"Hernu","2":"2"},{"1":"Karpov","2":"2"},{"1":"Nool","2":"2"},{"1":"Sebrle","2":"2"},{"1":"Warners","2":"2"},{"1":"Zsivoczky","2":"2"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}

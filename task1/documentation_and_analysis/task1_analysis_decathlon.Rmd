@@ -65,11 +65,15 @@ The following changes to the dataset were made by the cleaning script `data_clea
 
 * The column titles were renamed to remove full stops and start columns with 
 numbers with an 'x' using `janitor::clean_names()`
-* Columns `javeline` and `x110m_hurdle` were renamed to `javelin` and 
-`x110m_hurdles` to improve the match to the English descriptions of the names of
-the events.
+* Column `javeline` was renamed to `javelin` to improve the match to the English descriptions of the names of the events.
 * The original data had row names with the names of the athletes. These were
 moved to be a new column `athlete`.
+* Originally code was developed using one column per event. This did work and 
+the analysis code was relatively simple but the brief asked pointed out that the
+data wasn't 'tidy' so this was reworked to turn the events data into long data 
+creating two new two columns `decathlon_event` and `result`. 
+This improved the clean data but did make the analysis code involve slightly 
+more code.
 
 ## Analysis questions   
 
@@ -101,7 +105,8 @@ decathlon_data %>%
   select(decathlon_event, competition, result) %>%
   filter(decathlon_event == "100m") %>%
   group_by(competition) %>%
-  summarise(average_100m_time = mean(result, na.rm = TRUE))
+  summarise(average_100m_time = mean(result, na.rm = TRUE)) %>% 
+  ungroup()
 ```
 
 The average 100m time in **Decastar** was **11.17538s**.  
@@ -116,7 +121,8 @@ decathlon_data %>%
   unique() %>%
   group_by(athlete) %>%
   summarise(highest_total_points = sum(points, na.rm = TRUE)) %>%
-  slice_max(highest_total_points, n = 1)
+  slice_max(highest_total_points, n = 1) %>% 
+  ungroup()
 ```
 **Sebrle** has the highest total points across both competitions, **17,110**.
 
@@ -131,7 +137,8 @@ decathlon_data %>%
   select(decathlon_event, score = result, athlete, competition, rank, points) %>%
   filter(decathlon_event == "shot put") %>%
   group_by(competition) %>%
-  slice_max(points, n = 3)
+  slice_max(points, n = 3) %>% 
+  ungroup()
 ```
 
 In **Decastar** shot-put scores for the top three competitors were 
@@ -176,7 +183,8 @@ decathlon_data %>%
   # remove duplicates
   unique() %>%
   group_by(competition) %>%
-  summarise(num_athletes = n())
+  summarise(num_athletes = n()) %>% 
+  ungroup()
 ```
 **13** athletes took part in **Decastar**.  
 **28** athletes took part in **Olympic Games**.
@@ -190,7 +198,8 @@ decathlon_data %>%
   group_by(athlete) %>%
   summarise(number_competitions = n()) %>%
   filter(number_competitions == 2) %>%
-  arrange(athlete)
+  arrange(athlete) %>% 
+  ungroup()
 ```
 The following athletes took part in both competitions:
 
