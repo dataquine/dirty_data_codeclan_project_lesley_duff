@@ -13,12 +13,6 @@ library(janitor)
 library(readxl)
 library(tidyverse)
 
-halloween_candy_files <- c(
-  halloween_candy_file_2015 = "boing-boing-candy-2015.xlxs",
-  halloween_candy_file_2016 = "boing-boing-candy-2016.xlxs",
-  halloween_candy_file_2017 = "boing-boing-candy-2017.xlxs"
-)
-
 raw_2015 <- read_excel("raw_data/boing-boing-candy-2015.xlsx")
 raw_2016 <- read_excel("raw_data/boing-boing-candy-2016.xlsx")
 raw_2017 <- read_excel("raw_data/boing-boing-candy-2017.xlsx")
@@ -27,7 +21,11 @@ raw_2017 <- read_excel("raw_data/boing-boing-candy-2017.xlsx")
 # View(raw_2016)
 # View(raw_2017)
 
+# Helper function for standardising messy country names
 source("data_cleaning_scripts/clean_country.R")
+
+# Code specific to the structure of individual years
+#source("data_cleaning_scripts/clean_2015.R")
 
 # Get candy ratings from raw data for 2015
 # Produce dataframe of columns age, trick_or_treating, gender, year, country
@@ -37,7 +35,8 @@ get_candy_ratings_2015 <- function(raw_data) {
   candy_ratings <- raw_data %>%
     select(
       age = `How old are you?`,
-      trick_or_treating = `Are you going actually going trick or treating yourself?`,
+      trick_or_treating =
+        `Are you going actually going trick or treating yourself?`,
       "[Butterfinger]":"[York Peppermint Patties]",
       "[Sea-salt flavored stuff, probably chocolate, since this is the \"it\" flavor of the year]":"[Necco Wafers]"
     )
@@ -87,7 +86,8 @@ get_candy_ratings_2016 <- function(raw_data) {
   candy_ratings <- raw_data %>%
     select(
       age = `How old are you?`,
-      trick_or_treating = `Are you going actually going trick or treating yourself?`,
+      trick_or_treating =
+        `Are you going actually going trick or treating yourself?`,
       gender = `Your gender:`,
       country = `Which country do you live in?`,
       "[100 Grand Bar]":"[York Peppermint Patties]"
