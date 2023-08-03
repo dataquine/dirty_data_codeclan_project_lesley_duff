@@ -45,6 +45,9 @@ N.B. A copy of this file is in `task1/raw_data/decathlon.rds`
 
 ### Task 4 - Halloween Candy
 
+[So Much Candy Data, Seriously](https://www.scq.ubc.ca/so-much-candy-data-seriously/). 
+University of British Columbia
+
 N.B. Before attempting to run any cleaning/analysis scripts the three source 
 data files required should be copied to folder `task4/raw_data`. Full details in the analysis document.
 
