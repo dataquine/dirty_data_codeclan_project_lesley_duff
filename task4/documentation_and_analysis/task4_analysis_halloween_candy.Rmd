@@ -13,24 +13,71 @@ output:
 
 ## Introduction
 
-We have data from a light-hearted online survey conducted by the University of 
-British Columbia. The main aim is to gather what users feel about different 
-types of candy by giving them ratings. The results are analysed and published on
-the Boing Boing website. You can download a poster of a 
-[visualisation of the results from 2017 (PDF)](https://boingboing.net/wp-content/uploads/2017/10/candyhierarchy2017.pdf)
+We have data from a light-hearted online 'CANDY HIERARCHY' survey conducted from
+2014 to 2017 by [Dave Ng of the University of British Columbia](https://www.msl.ubc.ca/people/dr-dave-ng/). The main aim of the survey
+was to gather what users feel about different types of candy by giving them 
+ratings.
 
-The source data for a number of years is available for download.
+The survey also asks about whether users are participating in the tradition of 
+[trick or treating](https://en.wikipedia.org/wiki/Trick-or-treating) - better 
+known as 'guising' in Scotland.
 
-**Source:** [So Much Candy Data, Seriously](https://www.scq.ubc.ca/so-much-candy-data-seriously/)
+> "The "treat" is some form of confectionery, usually candy/sweets, although in 
+some cultures money is given instead." [Wikipedia]
+
+The results were analysed and published on
+the Boing Boing website e.g. you can download a poster of a visual analysis of 
+the most recent year (2017).
+
+* [visualisation of the results from 2017 (PDF)](https://boingboing.net/wp-content/uploads/2017/10/candyhierarchy2017.pdf)
+
+The survey data for a number of years is available for download.
+
+**Data Source:** [So Much Candy Data, Seriously](https://www.scq.ubc.ca/so-much-candy-data-seriously/)
+
+## Assumptions
+
+### Non-technical
+* The tone of the survey is light-hearted - it's categorised on the Boing Boing 
+website as
+
+>creative / humour / math / web experiment
+
+* The survey questions are a mixture of fixed 'candy' items but also 
+free text for members of the general public from around the world. 
+The datasets produced are website user generated content, a mixture of answers 
+to structured survey questions but also *unstructured* and *unfiltered* text. 
+Users themselves have responded in humorous ways. But the survey was still 
+conducted in a 'formal' way gathering responses via web forms.
+
+* Some ages provided are for young children, parents/adults are possibly 
+filling out the form on behalf of their child.
+
+## Technical
 
 We have three spreadsheet files representing survey results from 2015, 2016 and 
-2017in our `raw_data` folder.
+2017 in our `raw_data` folder.  
 N.B. These file names have been standardised from what you will find on the 
-source website.
+data source website.
 
 1. [boing-boing-candy-2015.xlsx](../raw_data/boing-boing-candy-2015.xlsx)
 2. [boing-boing-candy-2016.xlsx](../raw_data/boing-boing-candy-2016.xlsx)
-3. [boing-boing-candy-2015.xlsx](../raw_data/boing-boing-candy-2015.xlsx)
+3. [boing-boing-candy-2017.xlsx](../raw_data/boing-boing-candy-2017.xlsx)
+
+
+* The data source website contains open data from 2014-2017 however we will not 
+be including 2014 as
+
+>Unfortunate quirks in the data include the fact that the 2014 data is not the 
+raw set (can’t seem to find it)"
+
+* For analysis efficiency the cleaning done for analysis will only create a new
+dataset containing **only** the items *necessary* for the analysis, other 
+columns will be ignored. This restructuring comes at the expense of increasing 
+the file sizes involved. e,g, original `raw_data` < 4MB whereas the `clean_data` file for analysis is ~35MB.
+
+* The columns vary from year to year but our cleaned data will standardise the 
+naming so all three years of data will be combined in one dataset.
 
 ## Cleaning
 
@@ -63,9 +110,7 @@ analysis.
 
 ### Country names
 
-Question 8 requires country names and asks specifically for US, Canada, UK by 
-name. Countries were not asked for in the 2015 survey so for that year in the 
-new dataset have been set to NA. For 2016/2017 there are a number of issues Particularly for US many references are jokey as if being chanted. Or slang 
+Question 8 requires country names and asks specifically for **US, Canada, UK** by name. Countries were not asked for in the 2015 survey so for that year in the new dataset have been set to NA. For 2016/2017 there are a number of issues Particularly for US many references are jokey as if being chanted. Or slang 
 versions like `murica`
 Some users have entered the name of US states instead of their country.
 For Canada there are some punctuation typos
@@ -84,6 +129,14 @@ This was a character column and especially in earlier years has a few values as
 jokey replies to the question. It was decided to set non numeric values to NA 
 and then these text observations are dropped from analysis.
 N.B. This conversion may generate warning messages "NAs introduced by coercion".
+
+The numerical age provided was checked to see if it was in a reasonable range.
+As of 2023-01-02 [oldest known individual who ever lived](https://en.wikipedia.org/wiki/List_of_the_verified_oldest_people) was 122
+We also excluded 0 or entries for children under 3. We've left children 3 and 
+above in on the assumption that parents are possibly completing the form on 
+behalf of their child and trick or treating usually involves walking to 
+houses. If age values were outside the chosen range they were changed to NA and 
+not included in analysis.
 
 ### Dataset for analysis
 
@@ -249,10 +302,7 @@ halloween_candy %>%
 
 ### Q8 Popular candy bar by country
 
-What was the most popular candy bar by this rating for people in US, Canada, UK,
-and all other countries?
-
-```{r eval=FALSE, include=FALSE}
+```{r eval=FALSE}
 # This code was used during development to view country names
 # From the names returned patterns were added to the clean_country function
 distinct_countries <- halloween_candy %>%
@@ -263,6 +313,8 @@ distinct_countries <- halloween_candy %>%
 
 distinct_countries
 ```
+What was the most popular candy bar by this rating for people in US, Canada, UK,
+and all other countries?
 
 ```{r}
 # List of countries referenced by name in question 8
@@ -277,7 +329,8 @@ halloween_candy %>%
   group_by(country, candy_name) %>%
   summarise(total_popularity = sum(candy_popularity, na.rm = TRUE)) %>%
   slice_max(total_popularity, n = 1) %>%
-  arrange(desc(total_popularity))
+  arrange(desc(total_popularity)) %>% 
+  ungroup()
 ```
 
 * Most popular candy bar by this rating US, `Any full-sized candy bar`
@@ -290,3 +343,21 @@ asked for then.
 
 A bit of home interest - UK folk buck the rest of the world in choosing money 
 over sweeties...and this was *before* the cost of living crisis.
+
+## Other analysis
+
+### Top ten popular candy in UK
+
+What were the top ten popular candy by this rating for people in UK?
+
+```{r}
+halloween_candy %>%
+  select(candy_popularity, candy_name, country) %>%
+  filter(!is.na(country) & country == "UK") %>%
+  group_by(candy_name) %>%
+  summarise(total_popularity = sum(candy_popularity, na.rm = TRUE)) %>%
+  slice_max(total_popularity, n = 10) %>% 
+  arrange(desc(total_popularity), candy_name) %>% 
+  ungroup()
+```
+
