@@ -41,6 +41,7 @@ For those outside CodeClan the data can be obtained from the following sources
 ### Task 1 - Decathlon
 [decathlon: Performance in decathlon (data)](https://rdrr.io/github/husson/FactoMineR/man/decathlon.html).  
 Department of statistics and computer science, Agrocampus Rennes
+
 N.B. A copy of this file is in `task1/raw_data/decathlon.rds`
 
 ### Task 4 - Halloween Candy
@@ -56,6 +57,12 @@ The following R packages are required to run the code. The version numbers used
 at the time of the original project are shown.
 
 ### Task 1
+
+| Package   | Version used for analysis |
+| --------- | ------------------------- |
+| `janitor`   | "2.2.0" |
+| `tidyverse` | "2.0.0" |
+
 ### Task 4
 | Package   | Version used for analysis |
 | --------- | ------------------------- |
