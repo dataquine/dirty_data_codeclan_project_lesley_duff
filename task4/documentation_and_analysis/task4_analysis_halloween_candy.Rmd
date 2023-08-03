@@ -16,7 +16,7 @@ output:
 We have data from a light-hearted online 'CANDY HIERARCHY' survey conducted from
 2014 to 2017 by [Dave Ng of the University of British Columbia](https://www.msl.ubc.ca/people/dr-dave-ng/). The main aim of the survey
 was to gather what users feel about different types of candy by giving them 
-ratings.
+ratings. The full details of the history of the survey can be found at [The Definitive Halloween Candy Hierarchy](https://www.scq.ubc.ca/the-2019-halloween-candy-hierarchy/).
 
 The survey also asks about whether users are participating in the tradition of 
 [trick or treating](https://en.wikipedia.org/wiki/Trick-or-treating) - better 
