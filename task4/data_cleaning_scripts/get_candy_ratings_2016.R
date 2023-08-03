@@ -1,3 +1,7 @@
+
+# Helper function for standardising messy country names
+source("data_cleaning_scripts/clean_country.R")
+
 # Get candy ratings from raw data for 2016
 # Produce dataframe of columns age, trick_or_treating, gender, year, country
 # candy_name, candy_rating and candy_popularity
