@@ -2762,24 +2762,83 @@ border-radius: 0px;
 <h1>Halloween Candy Data</h1>
 <div id="introduction" class="section level2">
 <h2>Introduction</h2>
-<p>We have data from a light-hearted online survey conducted by the
-University of British Columbia. The main aim is to gather what users
-feel about different types of candy by giving them ratings. The results
-are analysed and published on the Boing Boing website. You can download
-a poster of a <a href="https://boingboing.net/wp-content/uploads/2017/10/candyhierarchy2017.pdf">visualisation
-of the results from 2017 (PDF)</a></p>
-<p>The source data for a number of years is available for download.</p>
-<p><strong>Source:</strong> <a href="https://www.scq.ubc.ca/so-much-candy-data-seriously/">So Much
+<p>We have data from a light-hearted online ‘CANDY HIERARCHY’ survey
+conducted from 2014 to 2017 by <a href="https://www.msl.ubc.ca/people/dr-dave-ng/">Dave Ng of the
+University of British Columbia</a>. The main aim of the survey was to
+gather what users feel about different types of candy by giving them
+ratings.</p>
+<p>The survey also asks about whether users are participating in the
+tradition of <a href="https://en.wikipedia.org/wiki/Trick-or-treating">trick or
+treating</a> - better known as ‘guising’ in Scotland.</p>
+<blockquote>
+<p>“The”treat” is some form of confectionery, usually candy/sweets,
+although in some cultures money is given instead.” [Wikipedia]</p>
+</blockquote>
+<p>The results were analysed and published on the Boing Boing website
+e.g. you can download a poster of a visual analysis of the most recent
+year (2017).</p>
+<ul>
+<li><a href="https://boingboing.net/wp-content/uploads/2017/10/candyhierarchy2017.pdf">visualisation
+of the results from 2017 (PDF)</a></li>
+</ul>
+<p>The survey data for a number of years is available for download.</p>
+<p><strong>Data Source:</strong> <a href="https://www.scq.ubc.ca/so-much-candy-data-seriously/">So Much
 Candy Data, Seriously</a></p>
+</div>
+<div id="assumptions" class="section level2">
+<h2>Assumptions</h2>
+<div id="non-technical" class="section level3">
+<h3>Non-technical</h3>
+<ul>
+<li>The tone of the survey is light-hearted - it’s categorised on the
+Boing Boing website as</li>
+</ul>
+<blockquote>
+<p>creative / humour / math / web experiment</p>
+</blockquote>
+<ul>
+<li><p>The survey questions are a mixture of fixed ‘candy’ items but
+also free text for members of the general public from around the world.
+The datasets produced are website user generated content, a mixture of
+answers to structured survey questions but also <em>unstructured</em>
+and <em>unfiltered</em> text. Users themselves have responded in
+humorous ways. But the survey was still conducted in a ‘formal’ way
+gathering responses via web forms.</p></li>
+<li><p>Some ages provided are for young children, parents/adults are
+possibly filling out the form on behalf of their child.</p></li>
+</ul>
+</div>
+</div>
+<div id="technical" class="section level2">
+<h2>Technical</h2>
 <p>We have three spreadsheet files representing survey results from
-2015, 2016 and 2017in our <code>raw_data</code> folder. N.B. These file
-names have been standardised from what you will find on the source
-website.</p>
+2015, 2016 and 2017 in our <code>raw_data</code> folder.<br />
+N.B. These file names have been standardised from what you will find on
+the data source website.</p>
 <ol style="list-style-type: decimal">
 <li><a href="../raw_data/boing-boing-candy-2015.xlsx">boing-boing-candy-2015.xlsx</a></li>
 <li><a href="../raw_data/boing-boing-candy-2016.xlsx">boing-boing-candy-2016.xlsx</a></li>
-<li><a href="../raw_data/boing-boing-candy-2015.xlsx">boing-boing-candy-2015.xlsx</a></li>
+<li><a href="../raw_data/boing-boing-candy-2017.xlsx">boing-boing-candy-2017.xlsx</a></li>
 </ol>
+<ul>
+<li>The data source website contains open data from 2014-2017 however we
+will not be including 2014 as</li>
+</ul>
+<blockquote>
+<p>Unfortunate quirks in the data include the fact that the 2014 data is
+not the raw set (can’t seem to find it)”</p>
+</blockquote>
+<ul>
+<li><p>For analysis efficiency the cleaning done for analysis will only
+create a new dataset containing <strong>only</strong> the items
+<em>necessary</em> for the analysis, other columns will be ignored. This
+restructuring comes at the expense of increasing the file sizes
+involved. e,g, original <code>raw_data</code> &lt; 4MB whereas the
+<code>clean_data</code> file for analysis is ~35MB.</p></li>
+<li><p>The columns vary from year to year but our cleaned data will
+standardise the naming so all three years of data will be combined in
+one dataset.</p></li>
+</ul>
 </div>
 <div id="cleaning" class="section level2">
 <h2>Cleaning</h2>
@@ -2813,15 +2872,15 @@ columns have been omitted from this analysis.</p>
 </div>
 <div id="country-names" class="section level3">
 <h3>Country names</h3>
-<p>Question 8 requires country names and asks specifically for US,
-Canada, UK by name. Countries were not asked for in the 2015 survey so
-for that year in the new dataset have been set to NA. For 2016/2017
-there are a number of issues Particularly for US many references are
-jokey as if being chanted. Or slang versions like <code>murica</code>
-Some users have entered the name of US states instead of their country.
-For Canada there are some punctuation typos For UK there are
-misspellings of United Kingdom and individual countries such as Scotland
-and England.</p>
+<p>Question 8 requires country names and asks specifically for
+<strong>US, Canada, UK</strong> by name. Countries were not asked for in
+the 2015 survey so for that year in the new dataset have been set to NA.
+For 2016/2017 there are a number of issues Particularly for US many
+references are jokey as if being chanted. Or slang versions like
+<code>murica</code> Some users have entered the name of US states
+instead of their country. For Canada there are some punctuation typos
+For UK there are misspellings of United Kingdom and individual countries
+such as Scotland and England.</p>
 <p>To try to address some of the common variations found a helper
 function <code>clean_country()</code> has been added
 <code>data_cleaning_scripts/clean_country.R</code>. This is called from
@@ -2837,6 +2896,14 @@ values as jokey replies to the question. It was decided to set non
 numeric values to NA and then these text observations are dropped from
 analysis. N.B. This conversion may generate warning messages “NAs
 introduced by coercion”.</p>
+<p>The numerical age provided was checked to see if it was in a
+reasonable range. As of 2023-01-02 <a href="https://en.wikipedia.org/wiki/List_of_the_verified_oldest_people">oldest
+known individual who ever lived</a> was 122 We also excluded 0 or
+entries for children under 3. We’ve left children 3 and above in on the
+assumption that parents are possibly completing the form on behalf of
+their child and trick or treating usually involves walking to houses. If
+age values were outside the chosen range they were changed to NA and not
+included in analysis.</p>
 </div>
 <div id="dataset-for-analysis" class="section level3">
 <h3>Dataset for analysis</h3>
@@ -3053,6 +3120,15 @@ gender question was given.</p>
 </div>
 <div id="q8-popular-candy-bar-by-country" class="section level3">
 <h3>Q8 Popular candy bar by country</h3>
+<pre class="r"><code># This code was used during development to view country names
+# From the names returned patterns were added to the clean_country function
+distinct_countries &lt;- halloween_candy %&gt;%
+  select(country) %&gt;%
+  filter(!is.na(country)) %&gt;%
+  distinct() %&gt;%
+  arrange(country)
+
+distinct_countries</code></pre>
 <p>What was the most popular candy bar by this rating for people in US,
 Canada, UK, and all other countries?</p>
 <pre class="r"><code># List of countries referenced by name in question 8
@@ -3067,7 +3143,8 @@ halloween_candy %&gt;%
   group_by(country, candy_name) %&gt;%
   summarise(total_popularity = sum(candy_popularity, na.rm = TRUE)) %&gt;%
   slice_max(total_popularity, n = 1) %&gt;%
-  arrange(desc(total_popularity))</code></pre>
+  arrange(desc(total_popularity)) %&gt;% 
+  ungroup()</code></pre>
 <pre><code>## `summarise()` has grouped output by &#39;country&#39;. You can override using the
 ## `.groups` argument.</code></pre>
 <div data-pagedtable="false">
@@ -3090,6 +3167,27 @@ wasn’t something asked for then.</p>
 <p>A bit of home interest - UK folk buck the rest of the world in
 choosing money over sweeties…and this was <em>before</em> the cost of
 living crisis.</p>
+</div>
+</div>
+<div id="other-analysis" class="section level2">
+<h2>Other analysis</h2>
+<div id="top-ten-popular-candy-in-uk" class="section level3">
+<h3>Top ten popular candy in UK</h3>
+<p>What were the top ten popular candy by this rating for people in
+UK?</p>
+<pre class="r"><code>halloween_candy %&gt;%
+  select(candy_popularity, candy_name, country) %&gt;%
+  filter(!is.na(country) &amp; country == &quot;UK&quot;) %&gt;%
+  group_by(candy_name) %&gt;%
+  summarise(total_popularity = sum(candy_popularity, na.rm = TRUE)) %&gt;%
+  slice_max(total_popularity, n = 10) %&gt;% 
+  arrange(desc(total_popularity), candy_name) %&gt;% 
+  ungroup()</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["candy_name"],"name":[1],"type":["chr"],"align":["left"]},{"label":["total_popularity"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"Cash, or other forms of legal tender","2":"33"},{"1":"Any full-sized candy bar","2":"32"},{"1":"Lindt Truffle","2":"32"},{"1":"Rolos","2":"32"},{"1":"Tolberone something or other","2":"32"},{"1":"Milky Way","2":"30"},{"1":"Mars","2":"29"},{"1":"Twix","2":"28"},{"1":"Snickers","2":"27"},{"1":"Kit Kat","2":"26"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
 </div>
 </div>
 </div>
