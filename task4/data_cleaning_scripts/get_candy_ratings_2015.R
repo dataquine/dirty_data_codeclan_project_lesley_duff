@@ -1,6 +1,20 @@
+# Author: Lesley Duff
+# Filename: get_candy_ratings_2015.R
+# Title: Process 2015 data structure
+# Date Created: 2023-08-03
+# Description:
+#   From a data frame for 2015 restructure in to common structure used for
+# combining with other years. Produce data frame of columns:
+# age,
+# trick_or_treating,
+# gender,
+# year,
+# country,
+# candy_name,
+# candy_rating
+# candy_popularity
+
 # Get candy ratings from raw data for 2015
-# Produce dataframe of columns age, trick_or_treating, gender, year, country
-# candy_name, candy_rating and candy_popularity
 get_candy_ratings_2015 <- function(raw_data) {
   # Retrieve candy ratings columns
   candy_ratings <- raw_data %>%
@@ -11,7 +25,7 @@ get_candy_ratings_2015 <- function(raw_data) {
       "[Butterfinger]":"[York Peppermint Patties]",
       "[Sea-salt flavored stuff, probably chocolate, since this is the \"it\" flavor of the year]":"[Necco Wafers]"
     )
-  
+
   candy_ratings <- candy_ratings %>%
     # Clean up age field - non numeric become NA
     mutate(
@@ -22,7 +36,7 @@ get_candy_ratings_2015 <- function(raw_data) {
       year = 2015,
       country = NA
     )
-  
+
   # Turn wide data into long, Analysis asks Don’t count missing values
   # So will drop NAs
   candy_ratings_2015_long <- candy_ratings %>%
@@ -45,7 +59,7 @@ get_candy_ratings_2015 <- function(raw_data) {
     # Check that we don't have NAs in pivoted columns
     verify(!is.na(candy_name)) %>%
     verify(!is.na(candy_rating))
-  
+
   # View(candy_ratings_2015_long)
   return(candy_ratings_2015_long)
 }
